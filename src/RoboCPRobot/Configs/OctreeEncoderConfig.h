@@ -30,7 +30,11 @@ public:
   OctreeEncoderConfig();
   friend class configFactory;
   ~OctreeEncoderConfig();
+#if PCL_VERSION_COMPARE(<, 1, 7, 0)
   pcl::octree::compression_Profiles_e getCompressionProfile();
+#else
+  pcl::io::compression_Profiles_e getCompressionProfile();
+#endif
   bool getShowStatistics();
   double getPointResolution();
   double getOctreeResolution();
@@ -40,7 +44,11 @@ public:
   unsigned int getColorBitResolution();
 
 private:
+#if PCL_VERSION_COMPARE(<, 1, 7, 0)
   pcl::octree::compression_Profiles_e CompressionProfile;
+#else
+	pcl::io::compression_Profiles_e CompressionProfile;
+#endif
   bool ShowStatistics;
   double PointResolution;
   double OctreeResolution;

@@ -3,11 +3,11 @@
 
 KinectData::KinectData(void)
 {
-  PointCloud<PointXYZ>::Ptr cl (new PointCloud<PointXYZ>);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cl (new pcl::PointCloud<pcl::PointXYZ>);
   Cloud = cl;
 }
 
-KinectData::KinectData(PointCloud<PointXYZ>::Ptr cloud, time_t time)
+KinectData::KinectData(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, time_t time)
 {
   Time = time;
   Cloud = cloud;

@@ -15,10 +15,6 @@ ADD_DEFINITIONS( "-DHAS_BOOST" )
 
 find_package( OpenCV REQUIRED )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-INCLUDE_DIRECTORIES(RoboCPRobot)
-INCLUDE_DIRECTORIES(RoboCPServer)
-INCLUDE_DIRECTORIES(RoboCPCommon)
 
 project(Robot)
 
@@ -40,7 +36,7 @@ add_executable (Robot
 
 	
 	RoboCPRobot/CommandProcessing.h RoboCPRobot/CommandProcessing.cpp
-	RoboCPRobot/CommandBuffer.h
+	RoboCPRobot/CommandBuffer.h RoboCPRobot/Configs/CommandConfig.h
 
 	RoboCPRobot/Received.h RoboCPRobot/Received.cpp 
 	RoboCPRobot/IReceived.h RoboCPRobot/IReceived.cpp
@@ -48,31 +44,34 @@ add_executable (Robot
 	
 	RoboCPRobot/ArduCopterController.h RoboCPRobot/ArduCopterController.cpp
 	RoboCPRobot/ArduCopterReceived.h RoboCPRobot/ArduCopterReceived.cpp
-	RoboCPRobot/ArduCopterBuffer.h 
+	RoboCPRobot/ArduCopterBuffer.h RoboCPRobot/Configs/ArducopterConfig.h
 	
 	RoboCPRobot/NanoController.h RoboCPRobot/NanoController.cpp
 	RoboCPRobot/NanoReceived.h RoboCPRobot/NanoReceived.cpp
-	RoboCPRobot/NanoReceivedBuffer.h 
+	RoboCPRobot/NanoReceivedBuffer.h RoboCPRobot/Configs/CarduinoConfig.h
 
 	RoboCPRobot/CameraController.h RoboCPRobot/CameraController.cpp
 	RoboCPRobot/CameraReceived.h RoboCPRobot/CameraReceived.cpp
-	RoboCPRobot/CameraReceivedBuffer.h
+	RoboCPRobot/CameraReceivedBuffer.h RoboCPRobot/Configs/CameraConfig.h
 	
 	RoboCPRobot/DisplacementImages.h RoboCPRobot/DisplacementImages.cpp
 	RoboCPRobot/ImageFlowProcessing.h RoboCPRobot/ImageFlowProcessing.cpp
 
 	RoboCPRobot/SendSender.h RoboCPRobot/SendSender.cpp
 	RoboCPRobot/SendProcessing.h RoboCPRobot/SendProcessing.cpp
+	RoboCPRobot/Configs/SendConfig.h
 
 	RoboCPRobot/KinectController.h RoboCPRobot/KinectController.cpp
 	RoboCPRobot/KinectSender.h RoboCPRobot/KinectSender.cpp
 	RoboCPRobot/KinectDownsampler.h RoboCPRobot/KinectDownsampler.cpp
+	RoboCPRobot/Configs/KinectConfig.h
 
 	RoboCPRobot/SerialCom.h RoboCPRobot/SerialCom.cpp 
 	
 	RoboCPRobot/main.cpp
 
 )
+target_include_directories(Robot PRIVATE RoboCPCommon RoboCPRobot RoboCPRobot/Configs)
 target_link_libraries (Robot ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 
 
@@ -109,11 +108,9 @@ add_executable (Server
 	RoboCPServer/main.cpp
 
 )
+target_include_directories(Server PRIVATE RoboCPCommon RoboCPServer RoboCPRobot)
 target_link_libraries (Server ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 
-
-
-project(RoboCP)
 
 
 

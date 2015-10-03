@@ -18,9 +18,6 @@
 #endif
 
 using boost::asio::ip::tcp;
-using namespace pcl;
-using namespace pcl::octree;
-using namespace std;
 
 //Class purpose: taking KinectData object from buffer and sending it via TCP-IP
 class KinectSender :
@@ -33,7 +30,13 @@ public:
   KinectSender(KinectBuffer * buf);
   ~KinectSender(void);
 private:
-  PointCloudCompression<PointXYZ>* octreeCoder;
+
+#if PCL_VERSION_COMPARE(<, 1, 7, 0)
+	pcl::octree::PointCloudCompression<pcl::PointXYZ>* octreeCoder;
+#else
+	pcl::io::OctreePointCloudCompression<pcl::PointXYZ>* octreeCoder;
+#endif
+ 
   KinectBuffer * buffer;
   int port;
 };

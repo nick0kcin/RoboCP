@@ -18,9 +18,18 @@ void KinectSender::Configure(Config* kinectConfig, Config* octreeConfig)
 
   // We will encode point clouds before sending via octreeCoder
   // Parameters for constructor are taken from config
-  octreeCoder = new PointCloudCompression<PointXYZ> (octreeCfg->getCompressionProfile(), octreeCfg->getShowStatistics(), octreeCfg->getPointResolution(),
-                                                         octreeCfg->getOctreeResolution(), octreeCfg->getDoVoxelGridDownDownSampling(),
-														 octreeCfg->getIFrameRate(), octreeCfg->getDoColorEncoding(), octreeCfg->getColorBitResolution());
+#if PCL_VERSION_COMPARE(<, 1, 7, 0)
+  octreeCoder = new pcl::octree::PointCloudCompression<pcl::PointXYZ>(octreeCfg->getCompressionProfile(), octreeCfg->getShowStatistics(),
+													octreeCfg->getPointResolution(), octreeCfg->getOctreeResolution(),
+													octreeCfg->getDoVoxelGridDownDownSampling(), octreeCfg->getIFrameRate(),
+													octreeCfg->getDoColorEncoding(), octreeCfg->getColorBitResolution());
+#else
+  octreeCoder = new pcl::io::OctreePointCloudCompression<pcl::PointXYZ>(octreeCfg->getCompressionProfile(), octreeCfg->getShowStatistics(),
+													octreeCfg->getPointResolution(), octreeCfg->getOctreeResolution(),
+													octreeCfg->getDoVoxelGridDownDownSampling(), octreeCfg->getIFrameRate(),
+													octreeCfg->getDoColorEncoding(), octreeCfg->getColorBitResolution());;
+#endif
+  
 }
 
 void KinectSender::Start()
