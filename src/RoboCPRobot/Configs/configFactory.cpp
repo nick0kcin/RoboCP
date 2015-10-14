@@ -19,7 +19,17 @@
 
 
 */
+#include <QtCore/qfile.h>
+#include <QtCore/qjsonobject.h>
+#include <QtCore/qjsondocument.h>
 #include "configFactory.h"
+#include "KinectConfig.h"
+#include "CommandConfig.h"
+#include "SendConfig.h"
+#include "CarduinoConfig.h"
+#include "ArducopterConfig.h"
+#include "CameraConfig.h"
+#include "OctreeEncoderConfig.h"
 
 configFactory::~configFactory(){
 

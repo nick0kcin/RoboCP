@@ -20,15 +20,15 @@
 
 */
 #pragma once
+#include <string>
 #include "Config.h"
-#include "configFactory.h"
 class CarduinoConfig : public Config{
 public:
   CarduinoConfig();
   friend class configFactory;
   ~CarduinoConfig();
-  string getPort();
+  std::string getPort();
 
 private:
-  string Port;
+  std::string Port;
 };

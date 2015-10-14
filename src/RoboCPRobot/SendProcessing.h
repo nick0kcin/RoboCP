@@ -1,10 +1,10 @@
 #pragma once
-#include "ArduCopterReceived.h"
+//#include "ArduCopterReceived.h"
 #include "ArduCopterBuffer.h"
 #include "NanoReceivedBuffer.h"
 #include "CameraReceivedBuffer.h"
 #include "SendBuffer.h"
-#include "NanoReceived.h"
+//#include "NanoReceived.h"
 
 class SendProcessing
 {

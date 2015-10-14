@@ -1,27 +1,13 @@
 #pragma once
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <queue>
-
-#include "KinectData.h"
-#include "NanoReceived.h"
-#include "ArduCopterReceived.h"
-#include "CameraReceived.h"
-#include "Command.h"
-#include "Send.h"
-
 #include <boost/interprocess/sync/interprocess_mutex.hpp>
 #include <boost/interprocess/sync/interprocess_semaphore.hpp>
-#include <boost/asio.hpp>
-
-using namespace std;
 
 template <class Type>
 class ReceivedBuffer
 {
 private:
-  queue<Type> queue;
+  std::queue<Type> queue;
   boost::interprocess::interprocess_mutex* mtx; // Mutex for thread safety
 
 public:

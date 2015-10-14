@@ -1,12 +1,8 @@
 #pragma once
 #include "controller.h"
-
-#include "KinectData.h"
 #include "KinectBuffer.h"
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pcl/io/openni_grabber.h>
-#include <pcl/io/pcd_io.h>
 
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
@@ -14,11 +10,7 @@
 #include <glog/raw_logging.h>
 #endif
 
-using namespace pcl;
-using namespace std;
-
 // Kinect grabber in details: http://www.pointclouds.org/documentation/tutorials/openni_grabber.php#openni-grabber
-
 
 // Class purpose: getting point clouds from kinect, creating KinectData objects and placing them to buffer
 class KinectController :

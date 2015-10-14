@@ -1,11 +1,8 @@
 #pragma once
 #include "Controller.h"
-#include <time.h>
-#include <cv.h>
-#include <highgui.h>
-#include "Config.h"
 #include "CameraReceivedBuffer.h"
-#include "ImageFlowProcessing.h"
+
+class Config;
 
 class CameraController :
   public Controller

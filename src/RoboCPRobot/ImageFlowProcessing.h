@@ -1,10 +1,11 @@
 #pragma once
 #include <cv.h>
-#include <highgui.h>
-#include "DisplacementImages.h"
 #include "Controller.h"
 
 #define PI 3.1415  
+
+struct CvCapture;
+class DisplacementImages;
 
 class ImageFlowProcessing:
 	public Controller

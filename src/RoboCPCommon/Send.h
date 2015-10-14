@@ -1,24 +1,25 @@
 #pragma once
 #define _XOPEN_SOURCE
-#include <time.h>
+#include <ctime>
 #include "Point3d.h"
 #include "DisplacementImages.h"
 
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/serialization/nvp.hpp>
-#include <boost/serialization/shared_ptr.hpp>
+//#include <boost/archive/xml_iarchive.hpp>
+//#include <boost/archive/xml_oarchive.hpp>
+//#include <boost/serialization/nvp.hpp>
+//#include <boost/serialization/shared_ptr.hpp>
 
 #include "QtXml\qdom.h"
-#include <time.h>
 
+#include <sstream>
+#include <iomanip>
 
 class Send
 {
 
 private:
   
-  friend class boost::serialization::access;
+/*  friend class boost::serialization::access;
 	
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
@@ -40,7 +41,7 @@ private:
   ar & BOOST_SERIALIZATION_NVP(Time);
 	ar & BOOST_SERIALIZATION_NVP(Motion);
   }
-  
+  */
 
   QDomElement serialize(QDomDocument& doc){
   
@@ -117,12 +118,15 @@ public:
   float Yaw;
   float AltitudeSonic;
   float AltitudeBarometer;
-    
+
   Point3d Acceleration;
   int PacketType;
   time_t Time;
   //IplImage *Frame;
   Vector Motion;
+
+  friend QDataStream& operator<<(QDataStream& out, const Send& send);
+  friend QDataStream& operator>>(QDataStream& in, Send& send);
 
   Send(void);
   ~Send(void); 

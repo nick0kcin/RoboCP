@@ -21,8 +21,6 @@
 */
 #pragma once
 #include "Config.h"
-#include "configFactory.h"
-
 #include "pcl/compression/octree_pointcloud_compression.h"
 
 class OctreeEncoderConfig : public Config{

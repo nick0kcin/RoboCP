@@ -21,7 +21,6 @@
 */
 #pragma once
 #include "Config.h"
-#include "configFactory.h"
 class SendConfig : public Config{
 public:
   SendConfig();

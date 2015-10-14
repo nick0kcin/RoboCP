@@ -1,8 +1,9 @@
 #pragma once
 #include "Received.h"
-#include <time.h>
+#include <ctime>
 #include <cv.h>
 #include "DisplacementImages.h"
+
 class CameraReceived :
   public Received
 {

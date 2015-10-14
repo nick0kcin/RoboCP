@@ -22,33 +22,48 @@
 
 #include "OctreeEncoderConfig.h"
 
-OctreeEncoderConfig::OctreeEncoderConfig():CompressionProfile(), ShowStatistics(false), PointResolution(0.0), OctreeResolution(0.0), DoVoxelGridDownDownSampling(false), IFrameRate(), DoColorEncoding(false), ColorBitResolution()  {
-  
+OctreeEncoderConfig::OctreeEncoderConfig() :CompressionProfile(), ShowStatistics(false), PointResolution(0.0), OctreeResolution(0.0), DoVoxelGridDownDownSampling(false), IFrameRate(), DoColorEncoding(false), ColorBitResolution()
+{
+
 }
-OctreeEncoderConfig::~OctreeEncoderConfig(){
-  
+OctreeEncoderConfig::~OctreeEncoderConfig()
+{
+
 }
-pcl::octree::compression_Profiles_e OctreeEncoderConfig::getCompressionProfile() {
-  return CompressionProfile;
+#if PCL_VERSION_COMPARE(<, 1, 7, 0)
+pcl::octree::compression_Profiles_e OctreeEncoderConfig::getCompressionProfile()
+{
+#else
+pcl::io::compression_Profiles_e OctreeEncoderConfig::getCompressionProfile()
+#endif
+{
+	return CompressionProfile;
 }
-bool OctreeEncoderConfig::getShowStatistics() {
-  return ShowStatistics;
+bool OctreeEncoderConfig::getShowStatistics()
+{
+	return ShowStatistics;
 }
-double OctreeEncoderConfig::getPointResolution() {
-  return PointResolution;
+double OctreeEncoderConfig::getPointResolution()
+{
+	return PointResolution;
 }
-double OctreeEncoderConfig::getOctreeResolution() {
-  return OctreeResolution;
+double OctreeEncoderConfig::getOctreeResolution()
+{
+	return OctreeResolution;
 }
-bool OctreeEncoderConfig::getDoVoxelGridDownDownSampling() {
-  return DoVoxelGridDownDownSampling;
+bool OctreeEncoderConfig::getDoVoxelGridDownDownSampling()
+{
+	return DoVoxelGridDownDownSampling;
 }
-unsigned int OctreeEncoderConfig::getIFrameRate() {
-  return IFrameRate;
+unsigned int OctreeEncoderConfig::getIFrameRate()
+{
+	return IFrameRate;
 }
-bool OctreeEncoderConfig::getDoColorEncoding() {
-  return DoColorEncoding;
+bool OctreeEncoderConfig::getDoColorEncoding()
+{
+	return DoColorEncoding;
 }
-unsigned int OctreeEncoderConfig::getColorBitResolution() {
-  return ColorBitResolution;
+unsigned int OctreeEncoderConfig::getColorBitResolution()
+{
+	return ColorBitResolution;
 }

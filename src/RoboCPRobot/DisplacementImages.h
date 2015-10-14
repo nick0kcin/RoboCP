@@ -1,17 +1,11 @@
 #pragma once
-#include <cv.h>
-#include <highgui.h>
-/*
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/serialization/nvp.hpp>
-*/
 
-#include "QtCore\qdatastream.h"
-
-#include "QtXml\qdom.h"
+#include "QtCore/qdatastream.h"
+#include "QtXml/qdom.h"
 
 #define MAX_COUNT 400 
+
+struct CvPoint2D32f;
 
 typedef struct Vector
 {

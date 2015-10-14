@@ -38,6 +38,13 @@ Type ReceivedBuffer<Type>::Dequeue ()
   return value;
 }
 
+class KinectData;
+class NanoReceived;
+class ArduCopterReceived;
+class CameraReceived;
+class Command;
+class Send;
+
 template class ReceivedBuffer<int>;
 template class ReceivedBuffer< boost::shared_ptr<KinectData> >;
 template class ReceivedBuffer< boost::shared_ptr<NanoReceived> >;

@@ -1,6 +1,10 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.8 FATAL_ERROR)
 
 project(RoboCP)
+
+set(CMAKE_AUTOMOC ON)
+find_package(Qt5Network REQUIRED)
+find_package(Qt5Xml REQUIRED)
 
 find_package(PCL 1.2 REQUIRED)
 
@@ -37,6 +41,7 @@ add_executable (Robot
 	
 	RoboCPRobot/CommandProcessing.h RoboCPRobot/CommandProcessing.cpp
 	RoboCPRobot/CommandBuffer.h RoboCPRobot/Configs/CommandConfig.h
+	RoboCPRobot/Configs/CommandConfig.cpp
 
 	RoboCPRobot/Received.h RoboCPRobot/Received.cpp 
 	RoboCPRobot/IReceived.h RoboCPRobot/IReceived.cpp
@@ -45,34 +50,41 @@ add_executable (Robot
 	RoboCPRobot/ArduCopterController.h RoboCPRobot/ArduCopterController.cpp
 	RoboCPRobot/ArduCopterReceived.h RoboCPRobot/ArduCopterReceived.cpp
 	RoboCPRobot/ArduCopterBuffer.h RoboCPRobot/Configs/ArducopterConfig.h
+	RoboCPRobot/Configs/ArducopterConfig.cpp
 	
 	RoboCPRobot/NanoController.h RoboCPRobot/NanoController.cpp
 	RoboCPRobot/NanoReceived.h RoboCPRobot/NanoReceived.cpp
 	RoboCPRobot/NanoReceivedBuffer.h RoboCPRobot/Configs/CarduinoConfig.h
+	RoboCPRobot/Configs/CarduinoConfig.cpp
 
 	RoboCPRobot/CameraController.h RoboCPRobot/CameraController.cpp
 	RoboCPRobot/CameraReceived.h RoboCPRobot/CameraReceived.cpp
 	RoboCPRobot/CameraReceivedBuffer.h RoboCPRobot/Configs/CameraConfig.h
+	RoboCPRobot/Configs/CameraConfig.cpp
 	
 	RoboCPRobot/DisplacementImages.h RoboCPRobot/DisplacementImages.cpp
 	RoboCPRobot/ImageFlowProcessing.h RoboCPRobot/ImageFlowProcessing.cpp
 
 	RoboCPRobot/SendSender.h RoboCPRobot/SendSender.cpp
 	RoboCPRobot/SendProcessing.h RoboCPRobot/SendProcessing.cpp
-	RoboCPRobot/Configs/SendConfig.h
+	RoboCPRobot/Configs/SendConfig.h RoboCPRobot/Configs/SendConfig.cpp
 
 	RoboCPRobot/KinectController.h RoboCPRobot/KinectController.cpp
 	RoboCPRobot/KinectSender.h RoboCPRobot/KinectSender.cpp
 	RoboCPRobot/KinectDownsampler.h RoboCPRobot/KinectDownsampler.cpp
-	RoboCPRobot/Configs/KinectConfig.h
+	RoboCPRobot/Configs/KinectConfig.h RoboCPRobot/Configs/KinectConfig.cpp
 
 	RoboCPRobot/SerialCom.h RoboCPRobot/SerialCom.cpp 
+	
+	RoboCPRobot/Configs/configFactory.h RoboCPRobot/Configs/OctreeEncoderConfig.h
+	RoboCPRobot/Configs/configFactory.cpp RoboCPRobot/Configs/OctreeEncoderConfig.cpp
+	RoboCPRobot/Config.h RoboCPRobot/Config.cpp
 	
 	RoboCPRobot/main.cpp
 
 )
 target_include_directories(Robot PRIVATE RoboCPCommon RoboCPRobot RoboCPRobot/Configs)
-target_link_libraries (Robot ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries (Robot Qt5::Network Qt5::Xml ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 
 
 

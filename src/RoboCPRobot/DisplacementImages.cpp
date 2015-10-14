@@ -1,3 +1,4 @@
+#include "highgui.h"
 #include "DisplacementImages.h"
 
 

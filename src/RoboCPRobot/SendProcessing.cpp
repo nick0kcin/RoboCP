@@ -1,3 +1,4 @@
+#include <boost/thread/thread.hpp> 
 #include "SendProcessing.h"
 
 
@@ -48,8 +49,9 @@ void SendProcessing::Start()
 		sendData->Motion = cameraData->Motion;
 
       sendBuffer->Enqueue (sendData);
-      Sleep (50); 
-  }
+      //Sleep (50); 
+	  boost::this_thread::sleep_for(boost::chrono::milliseconds(50));
+	}
 }
 
 SendProcessing::~SendProcessing(void)

@@ -1,3 +1,5 @@
+#include <highgui.h>
+#include "DisplacementImages.h"
 #include "ImageFlowProcessing.h"
 
 

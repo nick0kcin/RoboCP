@@ -1,6 +1,8 @@
+#include <iostream>
+#include <highgui.h>
 #include "CameraController.h"
-
 #include "CameraConfig.h"
+#include "ImageFlowProcessing.h"
 
 
 CameraController::CameraController(CameraReceivedBuffer *buf)
@@ -64,7 +66,7 @@ void CameraController::FakeStart(void)
 {
 	CvCapture *Capture; 
 	Capture=cvCreateFileCapture("C:/Users/Svetlana/Videos/Movavi Library/Umka2.avi");
-    cout<<"\nSecond camera isn't found! Videostream from file will be used.\n";
+    std::cout<<"\nSecond camera isn't found! Videostream from file will be used.\n";
 
 	IplImage *Frame;
   IplImage *FrameLast = 0;

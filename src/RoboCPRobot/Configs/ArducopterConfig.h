@@ -20,19 +20,19 @@
 
 */
 #pragma once
+#include <string>
 #include "Config.h"
-#include "configFactory.h"
 class ArducopterConfig : public Config{
 public:
   ArducopterConfig();
   friend class configFactory;
   ~ArducopterConfig();
-  string getPort();
+  std::string getPort();
   bool getIsAvailable();
   bool getDoFakeStart();
 
 private:
-  string Port;
+  std::string Port;
   bool IsAvailable;
   bool DoFakeStart;
 };

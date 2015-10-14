@@ -28,7 +28,7 @@ ArducopterConfig::ArducopterConfig():Port(""), IsAvailable(false), DoFakeStart(f
 ArducopterConfig::~ArducopterConfig(){
   
 }
-string ArducopterConfig::getPort() {
+std::string ArducopterConfig::getPort() {
   return Port;
 }
 bool ArducopterConfig::getIsAvailable() {

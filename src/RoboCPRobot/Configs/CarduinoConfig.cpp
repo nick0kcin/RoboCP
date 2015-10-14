@@ -28,6 +28,6 @@ CarduinoConfig::CarduinoConfig():Port("")  {
 CarduinoConfig::~CarduinoConfig(){
   
 }
-string CarduinoConfig::getPort() {
+std::string CarduinoConfig::getPort() {
   return Port;
 }
