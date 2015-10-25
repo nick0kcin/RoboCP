@@ -9,11 +9,11 @@ class QDomDocument;
 
 // Config class
 class XMLConfig {
-private:
+public:
 	QDomElement serialize(QDomDocument& doc);
 	void deserialize(const QDomElement& node);
 
-public:
+
 	QString IP;
 	QString KinectPort;
 	QString CommandPort;

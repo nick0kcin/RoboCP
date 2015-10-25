@@ -84,6 +84,7 @@ add_executable (Robot
 
 )
 target_include_directories(Robot PRIVATE RoboCPCommon RoboCPRobot RoboCPRobot/Configs)
+target_compile_definitions(Robot PRIVATE _CRT_SECURE_NO_WARNINGS)
 target_link_libraries (Robot Qt5::Network Qt5::Xml ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 
 
@@ -121,7 +122,8 @@ add_executable (Server
 
 )
 target_include_directories(Server PRIVATE RoboCPCommon RoboCPServer RoboCPRobot)
-target_link_libraries (Server ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
+target_compile_definitions(Server PRIVATE _CRT_SECURE_NO_WARNINGS)
+target_link_libraries (Server Qt5::Network Qt5::Xml ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 
 
 

@@ -1,5 +1,9 @@
 #pragma once
+#include <thread>
+#include <chrono>
 #include "KinectViewer.h"
+#include "KinectData.h"
+#include "XMLConfig.h"
 
 
 KinectViewer::KinectViewer (XMLConfig * x)
@@ -59,7 +63,7 @@ void KinectViewer::Start ()
 	Mtx->lock();
 	viewer->spinOnce();
 	Mtx->unlock();
-	Sleep (50);
+	std::this_thread::sleep_for(50ms);
   }
 
 }

@@ -17,9 +17,9 @@
 //#define NANO_TELEMETRY_TEST
 //#define NANO_INPUT_DATA_TEST
 
-#define NANO_BAUD_RATE 115200
-#define NANO_SECONDS_TO_RECONNECT 5
-#define TO_SEND_BUFF_SIZE 128
+const int NANO_BAUD_RATE = 115200;
+const int NANO_SECONDS_TO_RECONNECT = 5;
+const int TO_SEND_BUFF_SIZE = 128;
 
 class NanoController :
   public Controller

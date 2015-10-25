@@ -1,5 +1,5 @@
 #include "XMLConfig.h"
-#include "QtXml\qdom.h"
+#include "QtXml/qdom.h"
 
 XMLConfig::XMLConfig ()
 {
@@ -109,15 +109,14 @@ void XMLConfig::deserialize(const QDomElement& node)
 	using namespace pcl::io;
 	#endif
 
-	IP = node.attribute("IP");
-	KinectPort = node.attribute("KinectPort");
-	CommandPort = node.attribute("CommandPort");
-	SendPort = node.attribute("SendPort");
-	CarduinoPort = node.attribute("CarduinoPort");
-	ArducopterPort = node.attribute("ArducopterPort");
+	IP = node.namedItem("IP").firstChild().nodeValue();
+	KinectPort = node.namedItem("KinectPort").firstChild().nodeValue();
+	CommandPort = node.namedItem("CommandPort").firstChild().nodeValue();
+	SendPort = node.namedItem("SendPort").firstChild().nodeValue();
+	CarduinoPort = node.namedItem("CarduinoPort").firstChild().nodeValue();
+	ArducopterPort = node.namedItem("ArducopterPort").firstChild().nodeValue();
 
-	QString s = node.attribute("CompressionProfile");
-	CompressionProfile = LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR;
+	QString s = node.namedItem("CompressionProfile").firstChild().nodeValue();
 
 	if (s == "LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR")
 		CompressionProfile = LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR;
@@ -144,21 +143,21 @@ void XMLConfig::deserialize(const QDomElement& node)
 	if (s == "HIGH_RES_OFFLINE_COMPRESSION_WITH_COLOR")
 		CompressionProfile = HIGH_RES_OFFLINE_COMPRESSION_WITH_COLOR;
 
-	if (node.attribute("ShowStatistics") == "1")
+	if (node.namedItem("ShowStatistics").firstChild().nodeValue() == "1")
 		ShowStatistics = true;
 	else ShowStatistics = false;
-	PointResolution = node.attribute("PointResolution").toDouble();
-	OctreeResolution = node.attribute("OctreeResolution").toDouble();
-	if (node.attribute("DoVoxelGridDownDownSampling") == "1")
+	PointResolution = node.namedItem("PointResolution").firstChild().nodeValue().toDouble();
+	OctreeResolution = node.namedItem("OctreeResolution").firstChild().nodeValue().toDouble();
+	if (node.namedItem("DoVoxelGridDownDownSampling").firstChild().nodeValue() == "1")
 		DoVoxelGridDownDownSampling = true;
 	else DoVoxelGridDownDownSampling = false;
-	IFrameRate = node.attribute("IFrameRate").toInt();
-	if (node.attribute("DoColorEncoding") == "1")
+	IFrameRate = node.namedItem("IFrameRate").firstChild().nodeValue().toInt();
+	if (node.namedItem("DoColorEncoding").firstChild().nodeValue() == "1")
 		DoColorEncoding = true;
 	else DoColorEncoding = false;
-	ColorBitResolution = node.attribute("ColorBitREsolution").toInt();
-	CameraNumber = node.attribute("CameraNumber").toInt();
-	CameraFramesPerSecond = node.attribute("CameraFramesPerSecond").toInt();
-	CameraFrameWidth = node.attribute("CameraFrameWidth").toInt();
-	CameraFrameHeight = node.attribute("CameraFrameHeight").toInt();
+	ColorBitResolution = node.namedItem("ColorBitREsolution").firstChild().nodeValue().toInt();
+	CameraNumber = node.namedItem("CameraNumber").firstChild().nodeValue().toInt();
+	CameraFramesPerSecond = node.namedItem("CameraFramesPerSecond").firstChild().nodeValue().toInt();
+	CameraFrameWidth = node.namedItem("CameraFrameWidth").firstChild().nodeValue().toInt();
+	CameraFrameHeight = node.namedItem("CameraFrameHeight").firstChild().nodeValue().toInt();
 }

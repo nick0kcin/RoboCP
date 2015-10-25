@@ -11,6 +11,9 @@
 #include <pcl/visualization/pcl_visualizer.h>
 #include "XMLConfig.h"
 
+#include <QtCore/qfile.h>
+#include <QtXml/qdom.h>
+
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
@@ -29,17 +32,19 @@ int main(char *args[], int count)
 
   XMLConfig config;
   { //deserialization
-    std::ifstream ifs("config.xml");
-	if (ifs.is_open()) {
-	  boost::archive::xml_iarchive ia(ifs);
-	  ia >> BOOST_SERIALIZATION_NVP(config);
-	}
-	else
-	  cout << "Can't find config.xml! Default config used." << endl;
+	  QDomDocument doc;
+	  QFile file("config.xml");
+	  if (file.open(QIODevice::ReadOnly | QIODevice::Text) || doc.setContent(&file))
+	  {
+		  QDomNodeList eNodes = doc.elementsByTagName("XMLConfig");
+		  config.deserialize(eNodes.at(0).toElement());
+	  }
+	  else
+		cout << "Can't find config.xml! Default config used." << endl;	 
   }
 
   KinectBuffer kinectBuffer (10);
-  KinectViewer kinectViewer (&config);
+  KinectViewer kinectViewer (&config); //config isn't actually used there, remove it?
   KinectReceiver kinectReceiver (&config, &kinectBuffer);
   KinectManager kinectManager (&kinectBuffer, &kinectViewer);
 
@@ -55,7 +60,7 @@ int main(char *args[], int count)
 
   tgroup.create_thread ( boost::bind (&KinectViewer::Start, &kinectViewer) );
 
-  tgroup.create_thread ( boost::bind (&KinectReceiver::Start, &kinectReceiver) );
+  //tgroup.create_thread ( boost::bind (&KinectReceiver::Start, &kinectReceiver) );
 
   tgroup.create_thread ( boost::bind (&KinectManager::Start, &kinectManager) );
 

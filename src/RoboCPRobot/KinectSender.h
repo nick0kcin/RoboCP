@@ -1,14 +1,14 @@
 #pragma once
 #include "SenderBase.h"
-#include "KinectData.h"
+//#include "KinectData.h"
 #include "KinectBuffer.h"
-#include "Config.h"
+//#include "Config.h"
 
-#include <boost/asio.hpp>
-#include <pcl/point_cloud.h>
+//#include <boost/asio.hpp>
+//#include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pcl/io/pcd_io.h>
-#include <boost/interprocess/sync/interprocess_semaphore.hpp>
+//#include <pcl/io/pcd_io.h>
+//#include <boost/interprocess/sync/interprocess_semaphore.hpp>
 #include "pcl/compression/octree_pointcloud_compression.h"
 
 #ifdef ENABLE_LOGGING
@@ -17,7 +17,7 @@
 #include <glog/raw_logging.h>
 #endif
 
-using boost::asio::ip::tcp;
+class Config;
 
 //Class purpose: taking KinectData object from buffer and sending it via TCP-IP
 class KinectSender :

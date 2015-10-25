@@ -1,18 +1,8 @@
 #pragma once
-#include <iostream>
-#include <stdio.h>
-#include <sstream>
-#include <stdlib.h>
-#include <string>
-#include "XMLConfig.h"
-#include "KinectData.h"
 #include "KinectBuffer.h"
-#include "KinectViewer.h"
 #include "pcl/compression/octree_pointcloud_compression.h"
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-
-#include <boost/asio.hpp>
+#include <QtCore/qstring.h>
+#include <QtCore/qglobal.h>
 
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
@@ -20,12 +10,7 @@
 #include <glog/raw_logging.h>
 #endif
 
-using boost::asio::ip::tcp;
-
-using namespace pcl;
-using namespace pcl::octree;
-
-using namespace std;
+class XMLConfig;
 
 // Class purpose: receiving KinectData from robot and giving them to KinectBuffer
 class KinectReceiver
@@ -36,7 +21,11 @@ public:
   ~KinectReceiver(void);
 private:
   KinectBuffer* kinectBuffer;
-  PointCloudCompression<PointXYZ>* octreeCoder;
-  string ip;
-  string port;
+  #if PCL_VERSION_COMPARE(<, 1, 7, 0)
+  pcl::octree::PointCloudCompression<pcl::PointXYZ>* octreeCoder;
+  #else
+  pcl::io::OctreePointCloudCompression<pcl::PointXYZ>* octreeCoder;
+  #endif
+  QString ip;
+  quint16 port;
 };

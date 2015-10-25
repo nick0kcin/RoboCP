@@ -1,15 +1,7 @@
 #pragma once
-#include <iostream>
-#include <stdio.h>
-#include <sstream>
-#include <stdlib.h>
-#include <string>
-#include "XMLConfig.h"
-#include "Send.h"
+#include <QtCore/qglobal.h>
+#include <QtCore/qstring.h>
 #include "SendBuffer.h"
-#include "KinectViewer.h"
-
-#include <boost/asio.hpp>
 
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
@@ -17,8 +9,7 @@
 #include <glog/raw_logging.h>
 #endif
 
-using boost::asio::ip::tcp;
-using namespace std;
+class XMLConfig;
 
 // Class purpose: receivig Send objects and adding them to buffer
 class SendReceiver
@@ -28,7 +19,7 @@ public:
   SendReceiver (XMLConfig * x, SendBuffer* b);
   ~SendReceiver (void);
 private:
-  string ip;
-  string port;
+  QString ip;
+  quint16 port;
   SendBuffer* sendBuffer;
 };

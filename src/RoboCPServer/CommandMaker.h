@@ -1,13 +1,6 @@
 #pragma once
-#include "XMLConfig.h"
-#include "Command.h"
-#include <iostream>
-#include <stdio.h>
-#include <sstream>
-#include <stdlib.h>
-#include <string>
-
-#include <boost/asio.hpp>
+#include <QtCore/qglobal.h>
+#include <QtCore/qstring.h>
 
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
@@ -15,9 +8,7 @@
 #include <glog/raw_logging.h>
 #endif
 
-using boost::asio::ip::tcp;
-
-using namespace std;
+class XMLConfig;
 
 // Class purpose: reading commands from console and sending them to robot
 class CommandMaker
@@ -28,5 +19,5 @@ public:
   ~CommandMaker(void);
 private:
   QString ip;
-  QString port;
+  quint16 port;
 };

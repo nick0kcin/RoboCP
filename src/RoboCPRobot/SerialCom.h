@@ -1,8 +1,8 @@
 #pragma once
-#include <Windows.h>
-#include <WinDef.h>
 #include <tchar.h>
 #include "XMLConfig.h"
+#include <Windows.h> //must either include this after PCL headers or add NOMINMAX definition to project properties
+					//otherwise min and max macros tamper with min() and max() methods calls
 
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES

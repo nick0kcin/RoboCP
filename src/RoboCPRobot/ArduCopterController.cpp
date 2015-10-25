@@ -1,5 +1,6 @@
-#include "ArduCopterController.h"
-
+#include <thread>
+#include <chrono>
+#include "ArduCopterController.h" //warnings here
 #include "ArducopterConfig.h"
 
 
@@ -41,7 +42,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[8] = 0x79;
   DataToSend[9] = 0x37;
   copterCom->Write((char *)&DataToSend[0],10);
-  Sleep(10000);
+  std::this_thread::sleep_for(10s);
   
   DataToSend[0] = 0xFE;
   DataToSend[1] = 0x09;
@@ -61,7 +62,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[14] = 0xC2;
   DataToSend[15] = 0x3C;
   copterCom->Write((char *)&DataToSend[0],16);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -78,7 +79,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0xC0;
   DataToSend[13] = 0x34;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(100);
+  std::this_thread::sleep_for(100ms);
   
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -95,7 +96,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0x51;
   DataToSend[13] = 0x61;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -112,7 +113,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0x03;
   DataToSend[13] = 0x3D;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -129,7 +130,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0x92;
   DataToSend[13] = 0x68;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -146,7 +147,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0xBB;
   DataToSend[13] = 0x72;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -163,7 +164,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0x2A;
   DataToSend[13] = 0x27;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -180,7 +181,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0xBA;
   DataToSend[13] = 0x61;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -197,7 +198,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0x2B;
   DataToSend[13] = 0x34;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(100);
+  std::this_thread::sleep_for(100ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -214,7 +215,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0x71;
   DataToSend[13] = 0x98;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -231,7 +232,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0xE0;
   DataToSend[13] = 0xCD;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -248,7 +249,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0x79;
   DataToSend[13] = 0x92;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -265,7 +266,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0xE8;
   DataToSend[13] = 0xC7;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -282,7 +283,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0xE3;
   DataToSend[13] = 0x8C;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
 
   DataToSend[0] = 0xFE; 
   DataToSend[1] = 0x06;
@@ -299,7 +300,7 @@ void ArduCopterController::sendInitionalData(void)
   DataToSend[12] = 0x72;
   DataToSend[13] = 0xD9;
   copterCom->Write((char *)&DataToSend[0],14);
-  Sleep(50);
+  std::this_thread::sleep_for(50ms);
   stage = -6;
   #ifdef ENABLE_LOGGING
   RAW_LOG(INFO, "ArduCopterController: Initional data sent!");

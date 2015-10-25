@@ -1,5 +1,6 @@
 #pragma once
 #include "KinectManager.h"
+#include "KinectData.h"
 
 
 KinectManager::KinectManager (KinectBuffer* b, KinectViewer* v)

@@ -1,4 +1,5 @@
 #include "KinectDownsampler.h"
+#include "KinectData.h"
 
 KinectDownsampler::KinectDownsampler (KinectBuffer * inputBuf, KinectBuffer * outputBuf)
 {
@@ -27,7 +28,7 @@ KinectDownsampler::~KinectDownsampler()
 {
 }
 
-void KinectDownsampler::downsample (const PointCloud<PointXYZ>::ConstPtr &CloudIn, PointCloud<PointXYZ>::Ptr &CloudOut)
+void KinectDownsampler::downsample (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &CloudIn, pcl::PointCloud<pcl::PointXYZ>::Ptr &CloudOut)
 {
   CloudOut->points.clear();
   CloudOut->is_dense = false;

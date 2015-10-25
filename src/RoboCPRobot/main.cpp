@@ -146,7 +146,7 @@ int main(char *args[], int count)
 
   tgroup.create_thread ( boost::bind (&KinectDownsampler::Start, &kinectDownsampler) );
 
-  tgroup.create_thread ( boost::bind (&KinectSender::Start, &kinectSender) );
+  //tgroup.create_thread ( boost::bind (&KinectSender::Start, &kinectSender) );
 
   tgroup.create_thread ( boost::bind (&ClientReceiver::Start, &commandReceiver) );
   

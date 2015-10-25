@@ -12,7 +12,7 @@ NanoController::NanoController(NanoReceivedBuffer *buf)
   buffer = buf;
   lastReadTime = time(NULL);
   
-  dataToSend = new char(TO_SEND_BUFF_SIZE);
+  dataToSend = new char[TO_SEND_BUFF_SIZE];
   readyToNewMessage = true;
 }
 

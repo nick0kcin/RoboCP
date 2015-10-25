@@ -38,12 +38,13 @@ void SendSender::Start()
 		RAW_LOG(INFO, "SendSender: Connected!");
 		#endif 
 
-		QByteArray block;
-		QDataStream outStream(&block, QIODevice::ReadWrite);
 		while (socket->isOpen())
 		{
 			boost::shared_ptr<Send> sendData;
 			sendData = buffer->Dequeue(); // Reading Send object from buffer
+
+			QByteArray block;
+			QDataStream outStream(&block, QIODevice::ReadWrite);
 
 			outStream << quint16(0) << *sendData;
 			outStream.device()->seek(0);
@@ -51,9 +52,10 @@ void SendSender::Start()
 			socket->write(block);
 			socket->waitForBytesWritten(5000);
 			block.clear();
+			outStream.device()->reset();
 	}
 }
-	catch (exception& e)
+	catch (std::exception& e)
 	{
 		std::cout << "SendSender: Exception: " << e.what() << std::endl; //TODO: write in log
 		#ifdef ENABLE_LOGGING

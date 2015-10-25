@@ -1,10 +1,5 @@
 #pragma once
-/*
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/serialization/nvp.hpp>
-*/
-#include "QtXml\qdom.h"
+#include "QtXml/qdom.h"
 
 struct Point3d
 {

@@ -9,7 +9,7 @@
 //#include <boost/serialization/nvp.hpp>
 //#include <boost/serialization/shared_ptr.hpp>
 
-#include "QtXml\qdom.h"
+#include "QtXml/qdom.h"
 
 #include <sstream>
 #include <iomanip>

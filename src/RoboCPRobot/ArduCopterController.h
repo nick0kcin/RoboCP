@@ -1,11 +1,10 @@
 #pragma once
+#include <string>
+#include <ctime>
 #include "controller.h"
 #include "ArduCopterBuffer.h"
 #include "Config.h"
 #include "SerialCom.h"
-
-#include <string.h>
-#include <time.h>
 
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
@@ -25,7 +24,7 @@ class ArduCopterController :
 private:
   ArduCopterBuffer *buffer;
   SerialCom *copterCom;
-  string copterPort;
+  std::string copterPort;
   time_t lastReadTime;
   char stage;
   void sendInitionalData(void);
