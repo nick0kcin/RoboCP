@@ -2,9 +2,9 @@
 #include "ReceivedBuffer.h"
 #include "Command.h"
 
-class CommandBuffer :  public ReceivedBuffer <boost::shared_ptr<Command>>
+class CommandBuffer :  public ReceivedBuffer <boost::shared_ptr<Command> >
 {
 public:
-  CommandBuffer (int size) : ReceivedBuffer <boost::shared_ptr<Command>> (size) {}
+  CommandBuffer (int size) : ReceivedBuffer <boost::shared_ptr<Command> > (size) {}
 };
 

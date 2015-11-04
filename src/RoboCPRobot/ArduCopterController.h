@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <ctime>
-#include "controller.h"
+#include "Controller.h"
 #include "ArduCopterBuffer.h"
 #include "Config.h"
 #include "SerialCom.h"

@@ -62,14 +62,18 @@ void KinectSender::Start()
 			QDataStream outStream(&block, QIODevice::ReadWrite);
 
 			outStream << quint16(0);
-			outStream << pdata->Time; // Send time
+	    	struct 	std::tm tm;
+	    	gmtime_r(&(pdata->Time),&tm);
+			char timestr[9];
+			sprintf(timestr,"%d:%d:%d",tm.tm_hour,tm.tm_min,tm.tm_sec);
+			outStream <<timestr; // Send time
 			//octreeCoder->encodePointCloud(pdata->Cloud, socketStream); // Then send point cloud
 			outStream.device()->seek(0);
 			outStream << (quint16)(block.size() - sizeof(quint16));
 			socket->write(block);
 			socket->waitForBytesWritten(5000);
 			block.clear();
-			outStream.device()->reset();	
+			outStream.device()->reset();
 		}
 
 	}

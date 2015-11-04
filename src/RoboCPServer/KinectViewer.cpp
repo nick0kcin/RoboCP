@@ -18,21 +18,21 @@ KinectViewer::~KinectViewer ()
 
 void KinectViewer::Start ()
 { // Adding some objects to viewer, then we will only update these objects
-  
+
   Mtx->lock();
   viewer = new pcl::visualization::PCLVisualizer ("Downsampled point cloud");
 
   boost::shared_ptr<KinectData> kData (new KinectData);
   kData->Time = time (NULL);
   viewer->addPointCloud (kData->Cloud, "cloud"); // Adding point cloud to viewer
-  char buf[50]; 
+  char buf[50];
   sprintf (buf, "Cloud time: %s", ctime(&kData->Time) );
   viewer->addText (buf, 5, 20, 10, 1, 1, 1, "CloudTime"); // Adding text line to viewer
   kData.reset();
 
-  
+
   // Adding multiple text lines to viewer (Send data)
-  
+
   viewer->addText ("Send:", 20, 305, 14, 1, 1, 1, "SendHead");
   viewer->addText ("Acceleration x:", 5, 290, 10, 1, 1, 1, "AccelerationX");
   viewer->addText ("Acceleration y:", 5, 278, 10, 1, 1, 1, "AccelerationY");
@@ -57,13 +57,13 @@ void KinectViewer::Start ()
   viewer->addText ("Motion x2:", 5, 92, 10, 1, 1, 1, "EndX");
   viewer->addText ("Motion y2:", 5, 82, 10, 1, 1, 1, "EndY");
   Mtx->unlock();
-  
+
   // main loop
   while (!viewer->wasStopped() ) {
 	Mtx->lock();
 	viewer->spinOnce();
 	Mtx->unlock();
-	std::this_thread::sleep_for(50ms);
+	std::this_thread::sleep_for(chrono::milliseconds(50));
   }
 
 }

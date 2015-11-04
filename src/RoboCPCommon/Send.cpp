@@ -16,7 +16,11 @@ QDataStream& operator<<(QDataStream& out, const Send& send)
 	out << send.Roll << send.Pitch << send.Yaw << send.AltitudeSonic << send.AltitudeBarometer;
 	out << send.Acceleration.x << send.Acceleration.y << send.Acceleration.z;
 	out << send.PacketType;
-	out << send.Time;
+	struct std::tm tm;
+    gmtime_r(&send.Time,&tm);
+      char timestr[9];
+	  sprintf(timestr,"%d:%d:%d",tm.tm_hour,tm.tm_min,tm.tm_sec);
+	out <<QString(timestr) ;
 	out << send.Motion.BeginningX << send.Motion.BeginningY << send.Motion.EndX << send.Motion.EndY << send.Motion.Length;
 	return out;
 }
@@ -27,7 +31,11 @@ QDataStream& operator>>(QDataStream& in, Send& send)
 	in >> send.Roll >> send.Pitch >> send.Yaw >> send.AltitudeSonic >> send.AltitudeBarometer;
 	in >> send.Acceleration.x >> send.Acceleration.y >> send.Acceleration.z;
 	in >> send.PacketType;
-	in >> send.Time;
+	QString TimeString;
+	in >> TimeString;
+	  struct std::tm tm;
+	  sscanf(TimeString.toStdString().c_str(),"%d:%d:%d",&tm.tm_hour,&tm.tm_min,&tm.tm_sec);
+	  send.Time=mktime(&tm);
 	in >> send.Motion.BeginningX >> send.Motion.BeginningY >> send.Motion.EndX >> send.Motion.EndY >> send.Motion.Length;
 	return in;
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include <time.h>
+#include <ctime>
 
 class QDomElement;
 class QDomDocument;
@@ -30,7 +30,7 @@ public:
 
 	Command(CommandType CType, CommandCondition CCondition, float ConditionValue);
 	Command();
-	
+
 	int ComType;
 	int ComCondition;
 	float Value;

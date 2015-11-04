@@ -42,7 +42,7 @@ void KinectReceiver::Start ()
       #ifdef ENABLE_LOGGING
 	    RAW_LOG (INFO,  "KinectReceiver: Connected!");
       #endif
-		std::this_thread::sleep_for(5s);
+		std::this_thread::sleep_for(chrono::seconds(5));
 
 		QDataStream inStream(&socket);
 		quint16 blockSize = 0;
@@ -59,8 +59,11 @@ void KinectReceiver::Start ()
 				continue;
 
 		    boost::shared_ptr<KinectData> kData (new KinectData); // Creating new KinectData
-		    inStream >> kData->Time; // Receivig time
-			
+		    QString timestring;
+		    inStream >> timestring; // Receivig time
+		    struct tm tm;
+		    sscanf(timestring.toStdString().c_str(),"%d:%d:%d",&tm.tm_hour,&tm.tm_min,&tm.tm_sec);
+            kData->Time=mktime(&tm);
 
 			quint32 rawDataSize;
 			inStream >> rawDataSize;
@@ -70,7 +73,7 @@ void KinectReceiver::Start ()
 			delete[] encodedPC;
 			std::istringstream encPCStream;
 			encPCStream.str(encPCString);
-			
+
 		    octreeCoder->decodePointCloud (encPCStream, kData->Cloud); // Then receiving point cloud
 		    kinectBuffer->Enqueue (kData); // adding KinectData in KinectBuffer
 	    }

@@ -1,8 +1,10 @@
 #pragma once
-#include "controller.h"
+#include "Controller.h"
 #include "KinectBuffer.h"
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#include <thread>
+#include <chrono>
 
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES

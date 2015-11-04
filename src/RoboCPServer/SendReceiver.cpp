@@ -23,12 +23,12 @@ void SendReceiver::Start ()
 	  QTcpSocket socket;
 	  while (socket.state() != QTcpSocket::ConnectedState)
 		  socket.connectToHost(QHostAddress(ip), port);
-  
+
       cout << "SendReceiver: Connected!" << endl; // TODO: write in log
       #ifdef ENABLE_LOGGING
 	    RAW_LOG (INFO, "SendReceiver: Connected!");
       #endif
-		std::this_thread::sleep_for(6s);
+		std::this_thread::sleep_for(chrono::seconds(6));
 
 		QDataStream inStream(&socket);
 		quint16 blockSize = 0;

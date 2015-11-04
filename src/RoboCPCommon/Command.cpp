@@ -38,12 +38,20 @@ void Command::deserialize(const QDomElement& node)
 
 QDataStream& operator<<(QDataStream& out, const Command& com)
 {
-	out << com.ComType << com.ComCondition << com.Value << com.Time;
+            struct 	std::tm tm;
+            gmtime_r(&com.Time,&tm);
+			char timestr[9];
+			sprintf(timestr,"%d:%d:%d",tm.tm_hour,tm.tm_min,tm.tm_sec);
+	out << com.ComType << com.ComCondition << com.Value << timestr;
 	return out;
 }
 
 QDataStream& operator>>(QDataStream& in, Command& com)
 {
-	in >> com.ComType >> com.ComCondition >> com.Value >> com.Time;
+QString timestring;
+	in >> com.ComType >> com.ComCondition >> com.Value >> timestring;
+	struct 	std::tm tm;
+    sscanf(timestring.toStdString().c_str(),"%d:%d:%d",&tm.tm_hour,&tm.tm_min,&tm.tm_sec);
+    com.Time=mktime(&tm);
 	return in;
 }

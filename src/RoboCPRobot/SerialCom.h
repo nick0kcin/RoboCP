@@ -1,7 +1,12 @@
 #pragma once
-#include <tchar.h>
+//#include <tchar.h>
 #include "XMLConfig.h"
-#include <Windows.h> //must either include this after PCL headers or add NOMINMAX definition to project properties
+#include <unistd.h>
+#include <termios.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+//#include <Windows.h> //must either include this after PCL headers or add NOMINMAX definition to project properties
 					//otherwise min and max macros tamper with min() and max() methods calls
 
 #ifdef ENABLE_LOGGING
@@ -18,7 +23,8 @@ class SerialCom
 private:
   char *out;
   int outSize;
-  HANDLE hComm;
+  int hComm;
+   struct termios optnew,optold;
 public:
   char *Read(void);
   void Write(char *Data, int DataSize);

@@ -11,19 +11,22 @@
 
 #include "QtXml/qdom.h"
 
+
 #include <sstream>
 #include <iomanip>
+#include <string>
+#include <cstdio>
 
 class Send
 {
 
 private:
-  
+
 /*  friend class boost::serialization::access;
-	
+
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
-	
+
 	ar & BOOST_SERIALIZATION_NVP(TopSonicSensor);
 	ar & BOOST_SERIALIZATION_NVP(FrontSonicSensor);
 	ar & BOOST_SERIALIZATION_NVP(LeftSonicSensor);
@@ -44,7 +47,7 @@ private:
   */
 
   QDomElement serialize(QDomDocument& doc){
-  
+
 	  QDomElement elem = doc.createElement("Send");
 	  elem.setAttribute("TopSonicSensor",TopSonicSensor);
 	  elem.setAttribute("FrontSonicSensor",FrontSonicSensor);
@@ -57,12 +60,19 @@ private:
 	  elem.setAttribute("Yaw",Yaw);
 	  elem.setAttribute("AltitudeSonic",AltitudeSonic);
 	  elem.setAttribute("AltitudeBarometer",AltitudeBarometer);
-	  
+
 	  elem.setAttribute("AccelerationX",Acceleration.x);
 	  elem.setAttribute("AccelerationY",Acceleration.y);
 	  elem.setAttribute("AccelerationZ",Acceleration.z);
 	  elem.setAttribute("PacketType",PacketType);
-	  elem.setAttribute("Time",Time);
+
+      struct std::tm tm;
+      gmtime_r(&Time,&tm);
+      char timestr[9];
+	  sprintf(timestr,"%d:%d:%d",tm.tm_hour,tm.tm_min,tm.tm_sec);
+      QString TimeString=QString(timestr);
+
+	  elem.setAttribute("Time",TimeString);
 	  elem.setAttribute("MotionBegX",Motion.BeginningX);
 	  elem.setAttribute("MotionEndX",Motion.EndX);
 	  elem.setAttribute("MotionBegY",Motion.BeginningY);
@@ -70,32 +80,32 @@ private:
 	  elem.setAttribute("MotionLength",Motion.Length);
 
 	  return elem;
-  
+
   }
 
   void deserialize(const QDomElement& node){
-  
+
 	  TopSonicSensor=node.attribute("TopSonicSensor").toShort();
 	  FrontSonicSensor=node.attribute("FrontSonicSensor").toShort();
 	  LeftSonicSensor=node.attribute("LeftSonicSensor").toShort();
 	  RightSonicSensor=node.attribute("RightSonicSensor").toShort();
 	  BackSonicSensor=node.attribute("BackSonicSensor").toShort();
-	  
+
 	  Roll=node.attribute("Roll").toFloat();
 	  Pitch=node.attribute("Pitch").toFloat();
 	  Yaw=node.attribute("Yaw").toFloat();
 	  AltitudeSonic=node.attribute("AltitudeSonic").toFloat();
 	  AltitudeBarometer=node.attribute("AltitudeBarometer").toFloat();
-	  
-	  
+
+
 	  Acceleration.x=node.attribute("AccelerationX").toShort();
 	  Acceleration.y=node.attribute("AccelerationY").toShort();
 	  Acceleration.z=node.attribute("AccelerationZ").toShort();
 	  PacketType=node.attribute("PacketType").toInt();
-	  
+
 	  struct std::tm tm;
-	  std::istringstream ss(node.attribute("Time").toStdString());
-      ss >> std::get_time(&tm, "%H:%M:%S"); 
+      QString TimeString=node.attribute("Time");
+	  sscanf(TimeString.toStdString().c_str(),"%d:%d:%d",&tm.tm_hour,&tm.tm_min,&tm.tm_sec);
 	  Time=mktime(&tm);
 
 	  Motion.BeginningX=node.attribute("MotionBegX").toFloat();
@@ -129,7 +139,7 @@ public:
   friend QDataStream& operator>>(QDataStream& in, Send& send);
 
   Send(void);
-  ~Send(void); 
+  ~Send(void);
 
 };
 

@@ -11,7 +11,7 @@ NanoController::NanoController(NanoReceivedBuffer *buf)
 {
   buffer = buf;
   lastReadTime = time(NULL);
-  
+
   dataToSend = new char[TO_SEND_BUFF_SIZE];
   readyToNewMessage = true;
 }
@@ -64,7 +64,7 @@ void NanoController::Start(void)
   int DataLength;
   unsigned int Counter = 0;
   while (true){
-    Sleep(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
     Counter++;
     if ((readyToNewMessage == false)&&(Counter > 100)){
       DataLength = 0;
@@ -183,6 +183,6 @@ void NanoController::FakeStart(void){
     NanoData->Time = time(NULL);
     buffer->Enqueue(NanoData);
     i = (i + 1)%5;
-    Sleep(103);
+    std::this_thread::sleep_for(std::chrono::milliseconds(103));
   }
 }
