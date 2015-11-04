@@ -8,7 +8,7 @@ SerialCom::SerialCom(char *PortName, int BaudRate)
   RAW_LOG (INFO, "SerialCom(%s): connecting...",PortName);
   #endif
   //hComm = CreateFile(pcCommPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
-  hComm=open(PortName,O_RDWR,O_NOCTTY);
+  hComm=open(PortName,O_RDWR|O_NOCTTY);
   if (hComm == -1){
       #ifdef ENABLE_LOGGING
       RAW_LOG (INFO, "SerialCom(%s): can't connect - this com port or device doesn't exist",PortName);
@@ -22,16 +22,20 @@ tcgetattr(hComm,&optold);
 bzero(&optnew,sizeof(optnew));
 optnew=optold;
 cfsetspeed(&optnew,BaudRate);
-optnew.c_cflag|= CS8;
-optnew.c_cflag&-CRTSCTS;
-optnew.c_iflag|=IGNPAR;
-optnew.c_iflag&=~IXON;
-optnew.c_iflag&=~IXOFF;
-optnew.c_iflag|=IGNBRK;
+optnew.c_cflag &=  ~CSIZE;
+optnew.c_cflag|= CS8; //8 bit, no parity,1 stopbit
+optnew.c_cflag&= ~CSTOPB;
+optnew.c_cflag&=~PARENB;
+optnew.c_cflag|=CRTSCTS;// enable RTS/CTS flow control
+optnew.c_iflag|=IGNPAR;// ignore parity errors
+optnew.c_iflag&=~IXON; //no IXON
+optnew.c_iflag&=~IXOFF;// no IXOFF
+optnew.c_iflag|=IGNBRK;//ignore breaking
 optnew.c_oflag=0;
 optnew.c_lflag=ICANON;
-optnew.c_cc[VTIME]=1;
-optnew.c_cc[VMIN]=(unsigned int)(READ_BUFF_SIZE-1);
+optnew.c_cc[VTIME]=1;//max timeout between symbols
+optnew.c_cc[VMIN]=(unsigned int)(READ_BUFF_SIZE-1);//reading block size
+cfmakeraw(&optnew);
 if(tcflush(hComm,TCIOFLUSH)<0)
 {
 #ifdef ENABLE_LOGGING
@@ -49,7 +53,7 @@ if(tcsetattr(hComm,TCSANOW,&optnew)<0)
 //  GetCommState(hComm, &conf.dcb);
 //  conf.dcb.BaudRate = BaudRate;              // Current baud
 //  conf.dcb.fBinary = TRUE;               // Binary mode; no EOF check
-//  conf.dcb.fParity = FALSE;               // Enable parity checking
+//  conf.dcb.fParity = FALSE;               // Enable parity checking    //tty.c_cflag     &=  ~PARENB
 //  conf.dcb.fOutxCtsFlow = FALSE;         // No CTS output flow control
 //  conf.dcb.fOutxDsrFlow = FALSE;         // No DSR output flow control
 //  conf.dcb.fDtrControl = DTR_CONTROL_ENABLE; // DTR flow control type
@@ -61,6 +65,10 @@ if(tcsetattr(hComm,TCSANOW,&optnew)<0)
 //  conf.dcb.fNull = FALSE;                // Disable null stripping
 //  conf.dcb.fRtsControl = RTS_CONTROL_ENABLE; // RTS flow control
 //  conf.dcb.fAbortOnError = FALSE;        // Do not abort reads/writes on error
+//  conf.dcb.ByteSize = 8;                 // Number of bits/byte, 4-8
+//
+//  conf.dcb.Parity = NOPARITY;            // 0-4=no,odd,even,mark,space
+//  conf.dcb.StopBits = ONESTOPBIT;
 //  if (!SetCommState(hComm, &conf.dcb)){
 //    #ifdef ENABLE_LOGGING
 //    RAW_LOG (INFO, "SerialCom(%s): can't set comm state",PortName);
@@ -78,6 +86,8 @@ if(tcsetattr(hComm,TCSANOW,&optnew)<0)
 //    RAW_LOG (INFO, "SerialCom(%s): can't set timeouts",PortName);
 //    #endif
 //  }
+
+
   delete [] PortName;
   sleep(3);
   }
