@@ -38,7 +38,7 @@ configFactory::configFactory(){
 
 }
 void configFactory::Parse(){
-  QFile json("config.json");
+  QFile json("../config.json");
   if (json.open(QIODevice::ReadOnly))
   {
     QJsonParseError  parseError;
@@ -47,6 +47,10 @@ void configFactory::Parse(){
     {
       MapOfConfigs[it.key()] = DetermineConfigObject(it.value().toObject());
     }
+  }
+  else
+  {
+  std::cout<<"Config json not found\n";
   }
 }
 

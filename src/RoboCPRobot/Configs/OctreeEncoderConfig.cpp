@@ -22,7 +22,11 @@
 
 #include "OctreeEncoderConfig.h"
 
-OctreeEncoderConfig::OctreeEncoderConfig() :CompressionProfile(), ShowStatistics(false), PointResolution(0.0), OctreeResolution(0.0), DoVoxelGridDownDownSampling(false), IFrameRate(), DoColorEncoding(false), ColorBitResolution()
+OctreeEncoderConfig::OctreeEncoderConfig() :
+#ifdef PCL
+CompressionProfile(),
+#endif
+ ShowStatistics(false), PointResolution(0.0), OctreeResolution(0.0), DoVoxelGridDownDownSampling(false), IFrameRate(), DoColorEncoding(false), ColorBitResolution()
 {
 
 }
@@ -30,6 +34,7 @@ OctreeEncoderConfig::~OctreeEncoderConfig()
 {
 
 }
+#ifdef PCL
 #if PCL_VERSION_COMPARE(<, 1, 7, 0)
 pcl::octree::compression_Profiles_e OctreeEncoderConfig::getCompressionProfile()
 {
@@ -39,6 +44,7 @@ pcl::io::compression_Profiles_e OctreeEncoderConfig::getCompressionProfile()
 {
 	return CompressionProfile;
 }
+#endif
 bool OctreeEncoderConfig::getShowStatistics()
 {
 	return ShowStatistics;

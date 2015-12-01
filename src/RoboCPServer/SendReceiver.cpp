@@ -24,11 +24,11 @@ void SendReceiver::Start ()
 	  while (socket.state() != QTcpSocket::ConnectedState)
 		  socket.connectToHost(QHostAddress(ip), port);
 
-      cout << "SendReceiver: Connected!" << endl; // TODO: write in log
+      std::cout << "SendReceiver: Connected!" << endl; // TODO: write in log
       #ifdef ENABLE_LOGGING
 	    RAW_LOG (INFO, "SendReceiver: Connected!");
       #endif
-		std::this_thread::sleep_for(chrono::seconds(6));
+		std::this_thread::sleep_for(std::chrono::seconds(6));
 
 		QDataStream inStream(&socket);
 		quint16 blockSize = 0;
@@ -43,14 +43,17 @@ void SendReceiver::Start ()
 
 			if (socket.bytesAvailable() < blockSize)
 				continue;
-
+				#ifdef BOOST
 		    boost::shared_ptr<Send> sendData (new Send);  // Creating new Send object
+		    #else
+		    std::shared_ptr<Send> sendData (new Send);  // Creating new Send object
+		    #endif
 		    inStream >> *sendData; // Receiving
 	    	sendBuffer->Enqueue (sendData); // Adding Send in buffer
 	    }
   }
-  catch (exception& e) {
-    cout << "SendReceiver: Exception: " << e.what () << endl; // TODO: write in log
+  catch (std::exception& e) {
+    std::cout << "SendReceiver: Exception: " << e.what () << endl; // TODO: write in log
     #ifdef ENABLE_LOGGING
 	  RAW_LOG (INFO, "SendReceiver: Exception: %s", e.what());
     #endif

@@ -10,13 +10,13 @@ XMLConfig::XMLConfig ()
   SendPort = "6668";
   CarduinoPort = "\\\\.\\COM3";
   ArducopterPort = "\\\\.\\COM4";
-
+#ifdef PCL
 #if PCL_VERSION_COMPARE(<, 1, 7, 0) //compression_Profiles_e enum is located in io namespace since 1.7.0
   CompressionProfile = pcl::octree::LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR;
 #else
   CompressionProfile = pcl::io::LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR;
 #endif
-
+#endif
   ShowStatistics = false;
   PointResolution = 0.001;
   OctreeResolution = 0.01;
@@ -32,13 +32,13 @@ XMLConfig::XMLConfig ()
 
 QDomElement XMLConfig::serialize(QDomDocument& doc)
 {
-
+#ifdef PCL
 	#if PCL_VERSION_COMPARE(<, 1, 7, 0) //compression_Profiles_e enum is located in io namespace since 1.7.0
 	using namespace pcl::octree;
 	#else
 	using namespace pcl::io;
 	#endif
-
+#endif
 	QDomElement elem = doc.createElement("XMLConfig");
 	elem.setAttribute("IP", IP);
 	elem.setAttribute("KinectPort", KinectPort);
@@ -49,7 +49,7 @@ QDomElement XMLConfig::serialize(QDomDocument& doc)
 
 	QString s;
 	s = "LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR";
-
+#ifdef PCL
 	if (CompressionProfile == LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR)
 		s = "LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR";
 	if (CompressionProfile == LOW_RES_ONLINE_COMPRESSION_WITH_COLOR)
@@ -74,7 +74,9 @@ QDomElement XMLConfig::serialize(QDomDocument& doc)
 		s = "HIGH_RES_OFFLINE_COMPRESSION_WITHOUT_COLOR";
 	if (CompressionProfile == HIGH_RES_OFFLINE_COMPRESSION_WITH_COLOR)
 		s = "HIGH_RES_OFFLINE_COMPRESSION_WITH_COLOR";
-
+#else
+s="NO_PCL";
+#endif
 	elem.setAttribute("CompressionProfile", s);
 
 	if (ShowStatistics)
@@ -102,13 +104,13 @@ QDomElement XMLConfig::serialize(QDomDocument& doc)
 
 void XMLConfig::deserialize(const QDomElement& node)
 {
-
+#ifdef PCL
 	#if PCL_VERSION_COMPARE(<, 1, 7, 0) //compression_Profiles_e enum is located in io namespace since 1.7.0
 	using namespace pcl::octree;
 	#else
 	using namespace pcl::io;
 	#endif
-
+#endif
 	IP = node.namedItem("IP").firstChild().nodeValue();
 	KinectPort = node.namedItem("KinectPort").firstChild().nodeValue();
 	CommandPort = node.namedItem("CommandPort").firstChild().nodeValue();
@@ -117,7 +119,7 @@ void XMLConfig::deserialize(const QDomElement& node)
 	ArducopterPort = node.namedItem("ArducopterPort").firstChild().nodeValue();
 
 	QString s = node.namedItem("CompressionProfile").firstChild().nodeValue();
-
+#ifdef PCL
 	if (s == "LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR")
 		CompressionProfile = LOW_RES_ONLINE_COMPRESSION_WITHOUT_COLOR;
 	if (s == "LOW_RES_ONLINE_COMPRESSION_WITH_COLOR")
@@ -142,7 +144,7 @@ void XMLConfig::deserialize(const QDomElement& node)
 		CompressionProfile = HIGH_RES_OFFLINE_COMPRESSION_WITHOUT_COLOR;
 	if (s == "HIGH_RES_OFFLINE_COMPRESSION_WITH_COLOR")
 		CompressionProfile = HIGH_RES_OFFLINE_COMPRESSION_WITH_COLOR;
-
+#endif
 	if (node.namedItem("ShowStatistics").firstChild().nodeValue() == "1")
 		ShowStatistics = true;
 	else ShowStatistics = false;

@@ -32,7 +32,7 @@ private:
   bool readyToNewMessage;
   NanoReceivedBuffer *buffer;
   SerialCom *nanoCom;
-  string nanoPort;
+  std::string nanoPort;
   time_t lastReadTime;
 public:
   void FakeStart(void);

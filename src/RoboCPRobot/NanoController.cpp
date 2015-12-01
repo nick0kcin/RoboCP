@@ -126,7 +126,11 @@ void NanoController::Start(void)
           }else{
             stage = -4;
             PShortData = (unsigned short *)&DataPacket[0];
+            #ifdef BOOST
             boost::shared_ptr<NanoReceived> NanoData (new NanoReceived());
+            #else
+            std::shared_ptr<NanoReceived> NanoData (new NanoReceived());
+            #endif // BOOST
             NanoData->FrontSonicSensor = PShortData[0];
             NanoData->RightSonicSensor = PShortData[1];
             NanoData->BackSonicSensor = PShortData[2];
@@ -174,7 +178,11 @@ void NanoController::Start(void)
 void NanoController::FakeStart(void){
   int i = 0;
   while (true){
+  #ifdef BOOST
     boost::shared_ptr<NanoReceived> NanoData (new NanoReceived());
+    #else
+    std::shared_ptr<NanoReceived> NanoData (new NanoReceived());
+    #endif // BOOST
     NanoData->FrontSonicSensor = (i % 5)*10;
     NanoData->RightSonicSensor = ((i+1)% 5)*10;
     NanoData->BackSonicSensor = ((i+2)% 5)*10;

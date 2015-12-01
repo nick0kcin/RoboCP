@@ -14,6 +14,7 @@ KinectReceiver::KinectReceiver(XMLConfig * x, KinectBuffer* b)
 	port = x->KinectPort.toUShort(); // Reading port from config
 	kinectBuffer = b;
 
+#ifdef PCL
 	// We will receive encoded point clouds, so we need to decode them
 	#if PCL_VERSION_COMPARE(<, 1, 7, 0)
 	octreeCoder = new pcl::octree::PointCloudCompression<pcl::PointXYZ>(x->CompressionProfile, x->ShowStatistics, x->PointResolution,
@@ -24,11 +25,14 @@ KinectReceiver::KinectReceiver(XMLConfig * x, KinectBuffer* b)
 		x->OctreeResolution, x->DoVoxelGridDownDownSampling, x->IFrameRate,
 		x->DoColorEncoding, x->ColorBitResolution);
 	#endif
+	#endif
 }
 
 KinectReceiver::~KinectReceiver ()
 {
+#ifdef PCL
   delete (octreeCoder);
+  #endif // PCL
 }
 
 void KinectReceiver::Start ()
@@ -38,11 +42,11 @@ void KinectReceiver::Start ()
 	  while(socket.state() != socket.ConnectedState)
 		socket.connectToHost(QHostAddress(ip), port);
 
-      cout << "KinectReceiver: Connected!" << endl; // TODO: write in log
+      std::cout << "KinectReceiver: Connected!" << endl; // TODO: write in log
       #ifdef ENABLE_LOGGING
 	    RAW_LOG (INFO,  "KinectReceiver: Connected!");
       #endif
-		std::this_thread::sleep_for(chrono::seconds(5));
+		std::this_thread::sleep_for(std::chrono::seconds(5));
 
 		QDataStream inStream(&socket);
 		quint16 blockSize = 0;
@@ -57,8 +61,11 @@ void KinectReceiver::Start ()
 
 			if (socket.bytesAvailable() < blockSize)
 				continue;
-
+				#ifdef BOOST
 		    boost::shared_ptr<KinectData> kData (new KinectData); // Creating new KinectData
+		    #else
+		    std::shared_ptr<KinectData> kData (new KinectData);
+		    #endif
 		    QString timestring;
 		    inStream >> timestring; // Receivig time
 		    struct tm tm;
@@ -73,13 +80,14 @@ void KinectReceiver::Start ()
 			delete[] encodedPC;
 			std::istringstream encPCStream;
 			encPCStream.str(encPCString);
-
+			#ifdef PCL
 		    octreeCoder->decodePointCloud (encPCStream, kData->Cloud); // Then receiving point cloud
+		    #endif
 		    kinectBuffer->Enqueue (kData); // adding KinectData in KinectBuffer
 	    }
   }
-  catch (exception& e) {
-    cout << "KinectReceiver: Exception: " << e.what () << endl; // TODO: write in log
+  catch (std::exception& e) {
+    std::cout << "KinectReceiver: Exception: " << e.what () << endl; // TODO: write in log
     #ifdef ENABLE_LOGGING
 	  RAW_LOG (INFO,  "KinectReceiver: Exception: %s", e.what());
     #endif

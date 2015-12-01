@@ -8,17 +8,24 @@
 
 KinectViewer::KinectViewer (XMLConfig * x)
 {
+#ifdef BOOST
   Mtx = new boost::interprocess::interprocess_mutex;
+  #else
+  Mtx=new std::mutex();
+  #endif
 }
 
 KinectViewer::~KinectViewer ()
 {
+#ifdef PCL
 	delete viewer;
+	#endif
 }
 
 void KinectViewer::Start ()
 { // Adding some objects to viewer, then we will only update these objects
 
+#ifdef PCL
   Mtx->lock();
   viewer = new pcl::visualization::PCLVisualizer ("Downsampled point cloud");
 
@@ -65,5 +72,5 @@ void KinectViewer::Start ()
 	Mtx->unlock();
 	std::this_thread::sleep_for(chrono::milliseconds(50));
   }
-
+  #endif
 }

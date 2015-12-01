@@ -372,7 +372,11 @@ void ArduCopterController::Start(void)
               #ifdef COPTER_TELEMETRY_TEST
               printf("%f  %f  %f\n",PFloatData[0]*180/3.1416,PFloatData[1]*180/3.1416,PFloatData[2]*180/3.1416);
               #endif
+              #ifdef BOOST
               boost::shared_ptr<ArduCopterReceived> CopterReceived (new ArduCopterReceived());
+              #else
+              std::shared_ptr<ArduCopterReceived> CopterReceived (new ArduCopterReceived());
+              #endif // BOOST
               CopterReceived->Roll = PFloatData[0];
               CopterReceived->Pitch = PFloatData[1];
               CopterReceived->Yaw = PFloatData[2];
@@ -388,7 +392,11 @@ void ArduCopterController::Start(void)
               #ifdef COPTER_TELEMETRY_TEST
               printf("%f\n",PFloatData[3]);
               #endif
+              #ifdef BOOST
               boost::shared_ptr<ArduCopterReceived> CopterReceived (new ArduCopterReceived());
+              #else
+              std::shared_ptr<ArduCopterReceived> CopterReceived (new ArduCopterReceived());
+              #endif // BOOST
               CopterReceived->AltitudeSonic = PFloatData[3];
               CopterReceived->PacketType = AltitudePacket;
               CopterReceived->Time = time(NULL);
@@ -402,7 +410,11 @@ void ArduCopterController::Start(void)
               #ifdef COPTER_TELEMETRY_TEST
               printf("%d %d %d\n",PShortData[4],PShortData[5],PShortData[6]);
               #endif
+              #ifdef BOOST
               boost::shared_ptr<ArduCopterReceived> CopterReceived (new ArduCopterReceived());
+              #else
+              std::shared_ptr <ArduCopterReceived> CopterReceived (new ArduCopterReceived());
+              #endif // BOOST
               CopterReceived->Acceleration.x = PShortData[4];
               CopterReceived->Acceleration.y = PShortData[5];
               CopterReceived->Acceleration.z = PShortData[6];
@@ -437,7 +449,11 @@ void ArduCopterController::FakeStart(void)
 {
   int i = 0;
   while (true){
+  #ifdef BOOST
     boost::shared_ptr<ArduCopterReceived> CopterReceived (new ArduCopterReceived());
+    #else
+    std::shared_ptr <ArduCopterReceived> CopterReceived (new ArduCopterReceived());
+    #endif // BOOST
     if (i % 3 == 0){
       CopterReceived->Roll = (float)i/180*3.1416;
       CopterReceived->Pitch = (float)(i+1)/180*3.1416;

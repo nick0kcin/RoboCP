@@ -1,6 +1,7 @@
 #pragma once
 #include "Controller.h"
 #include "CameraReceivedBuffer.h"
+#include <sstream>
 
 class Config;
 

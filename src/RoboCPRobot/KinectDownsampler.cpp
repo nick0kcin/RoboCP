@@ -9,8 +9,13 @@ KinectDownsampler::KinectDownsampler (KinectBuffer * inputBuf, KinectBuffer * ou
 
 void KinectDownsampler::Start(void)
 {
+#ifdef PCL
   while (true) {
+  #ifdef BOOST
     boost::shared_ptr<KinectData> inputData;
+    #else
+    std::shared_ptr <KinectData> inputData;
+    #endif
     inputData = inputBuffer->Dequeue(); // Reading from input buffer
 
 	if (!inputData->Cloud->empty() ) {
@@ -22,12 +27,13 @@ void KinectDownsampler::Start(void)
       outputBuffer->Enqueue (outputData); // Writing to output buffer
 	}
   }
+  #endif
 }
 
 KinectDownsampler::~KinectDownsampler()
 {
 }
-
+#ifdef PCL
 void KinectDownsampler::downsample (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &CloudIn, pcl::PointCloud<pcl::PointXYZ>::Ptr &CloudOut)
 {
   CloudOut->points.clear();
@@ -39,7 +45,7 @@ void KinectDownsampler::downsample (const pcl::PointCloud<pcl::PointXYZ>::ConstP
   CloudOut->sensor_origin_ = CloudIn->sensor_origin_;
 
   // We will take 1 point from every 10x10 block
-  for (int i = 0; i < 640*480; i+=6400) { // Next line of 10x10 blocks 
+  for (int i = 0; i < 640*480; i+=6400) { // Next line of 10x10 blocks
     for (int j = i; j < i+640; j+=10) { // Next 10x10 block in line
 
 	  // We want to take point with minimal z
@@ -60,3 +66,4 @@ void KinectDownsampler::downsample (const pcl::PointCloud<pcl::PointXYZ>::ConstP
   }
 
 }
+#endif

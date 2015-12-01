@@ -1,8 +1,12 @@
 #pragma once
 #include "Controller.h"
 #include "KinectBuffer.h"
+#ifdef PCL
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#else
+#include <memory>
+#endif
 #include <thread>
 #include <chrono>
 
@@ -26,6 +30,8 @@ public:
   ~KinectController(void);
 private:
   KinectBuffer * buffer;
+  #ifdef PCL
   void grabberCallBack (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud); // CallBack function for grabber
+  #endif
 };
 

@@ -23,7 +23,7 @@ void CommandMaker::Start()
 		while (socket.state() != QTcpSocket::ConnectedState)
 			socket.connectToHost(QHostAddress(ip), port);
 
-		cout << "CommandMaker: Connected!" << endl; // TODO: write in log
+		std::cout << "CommandMaker: Connected!" << endl; // TODO: write in log
 		#ifdef ENABLE_LOGGING
 		RAW_LOG(INFO, "CommandMaker: Connected!");
 		#endif
@@ -34,12 +34,12 @@ void CommandMaker::Start()
 		while (socket.isOpen())
 		{
 			// Reading command
-			cout << "input command type (int):" << endl;
-			cin >> com.ComType;
-			cout << "input command condition (int):" << endl;
-			cin >> com.ComCondition;
-			cout << "input condition value (float):" << endl;
-			cin >> com.Value;
+			std::cout << "input command type (int):" << endl;
+			std::cin >> com.ComType;
+			std::cout << "input command condition (int):" << endl;
+			std::cin >> com.ComCondition;
+			std::cout << "input condition value (float):" << endl;
+			std::cin >> com.Value;
 
 			QByteArray block;
 			QDataStream outStream(&block, QIODevice::ReadWrite);
@@ -51,9 +51,9 @@ void CommandMaker::Start()
 			socket.waitForBytesWritten(5000);
 		}
 	}
-	catch (exception& e)
+	catch (std::exception& e)
 	{
-		cout << "CommandMaker: Exception: " << e.what() << endl; // TODO: write in log
+		std::cout << "CommandMaker: Exception: " << e.what() << endl; // TODO: write in log
 		#ifdef ENABLE_LOGGING
 		RAW_LOG(INFO, "CommandMaker: Exception: %s", e.what());
 		#endif

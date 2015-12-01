@@ -2,7 +2,7 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>
 #include "SendBuffer.h"
-
+#include <iostream>
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <glog/logging.h>

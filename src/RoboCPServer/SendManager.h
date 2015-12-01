@@ -25,5 +25,9 @@ public:
 private:
   SendBuffer* sendBuffer;
   KinectViewer* kinectViewer;
+  #ifdef BOOST
   void updateText (boost::shared_ptr<Send> s);
+  #else
+  void updateText (std::shared_ptr<Send> s);
+  #endif
 };

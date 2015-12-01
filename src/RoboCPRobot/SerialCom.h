@@ -1,11 +1,13 @@
 #pragma once
 //#include <tchar.h>
 #include "XMLConfig.h"
+#if (defined __linux__)
 #include <unistd.h>
 #include <termios.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#endif
 //#include <Windows.h> //must either include this after PCL headers or add NOMINMAX definition to project properties
 					//otherwise min and max macros tamper with min() and max() methods calls
 

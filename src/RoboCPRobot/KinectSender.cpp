@@ -5,6 +5,8 @@
 #include "QtCore/qdatastream.h"
 #include "QtNetwork/qtcpserver.h"
 #include "QtNetwork/qtcpsocket.h"
+#include <iostream>
+#include <ctime>
 
 KinectSender::KinectSender(KinectBuffer * buf)
 {
@@ -21,6 +23,7 @@ void KinectSender::Configure(Config* kinectConfig, Config* octreeConfig)
 
 	// We will encode point clouds before sending via octreeCoder
 	// Parameters for constructor are taken from config
+	#ifdef PCL
 	#if PCL_VERSION_COMPARE(<, 1, 7, 0)
 	octreeCoder = new pcl::octree::PointCloudCompression<pcl::PointXYZ>(octreeCfg->getCompressionProfile(), octreeCfg->getShowStatistics(),
 		octreeCfg->getPointResolution(), octreeCfg->getOctreeResolution(),
@@ -32,7 +35,7 @@ void KinectSender::Configure(Config* kinectConfig, Config* octreeConfig)
 		octreeCfg->getDoVoxelGridDownDownSampling(), octreeCfg->getIFrameRate(),
 		octreeCfg->getDoColorEncoding(), octreeCfg->getColorBitResolution());;
 	#endif
-
+    #endif // PCL
 }
 
 void KinectSender::Start()
@@ -41,21 +44,25 @@ void KinectSender::Start()
 	{
 		QTcpServer server;
 		server.listen(QHostAddress::Any, port);
-		cout << "KinectSender: Waiting for connection.." << endl; //TODO: write in log
+		std::cout << "KinectSender: Waiting for connection.." << endl; //TODO: write in log
 		#ifdef ENABLE_LOGGING
 		RAW_LOG(INFO, "KinectSender: Waiting for connection..");
 		#endif
 		server.waitForNewConnection(-1);
 		QTcpSocket* socket = server.nextPendingConnection();
 
-		cout << "KinectSender: Connected!" << endl; //TODO: write in log
+		std::cout << "KinectSender: Connected!" << endl; //TODO: write in log
 		#ifdef ENABLE_LOGGING
 		RAW_LOG(INFO, "KinectSender: Connected!");
 		#endif
 
 		while (socket->isOpen())
 		{
+		#ifdef BOOST
 			boost::shared_ptr<KinectData> pdata;
+			#else
+			std::shared_ptr<KinectData> pdata;
+			#endif // BOOST
 			pdata = buffer->Dequeue(); // Read KinectData from buffer
 
 			QByteArray block;
@@ -77,9 +84,9 @@ void KinectSender::Start()
 		}
 
 	}
-	catch (exception& e)
+	catch (std::exception& e)
 	{
-		cout << "KinectSender: Exception: " << e.what() << endl; //TODO: write in log
+		std::cout << "KinectSender: Exception: " << e.what() << endl; //TODO: write in log
 		#ifdef ENABLE_LOGGING
 		RAW_LOG(INFO, "KinectSender: Exception: %s", e.what());
 		#endif
@@ -89,5 +96,7 @@ void KinectSender::Start()
 
 KinectSender::~KinectSender(void)
 {
+#ifdef PCL
 	delete (octreeCoder);
+	#endif // PCL
 }

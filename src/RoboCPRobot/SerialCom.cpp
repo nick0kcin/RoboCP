@@ -7,7 +7,7 @@ SerialCom::SerialCom(char *PortName, int BaudRate)
   #ifdef ENABLE_LOGGING
   RAW_LOG (INFO, "SerialCom(%s): connecting...",PortName);
   #endif
-  //hComm = CreateFile(pcCommPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
+  #if defined __linux___
   hComm=open(PortName,O_RDWR|O_NOCTTY);
   if (hComm == -1){
       #ifdef ENABLE_LOGGING
@@ -48,12 +48,51 @@ if(tcsetattr(hComm,TCSANOW,&optnew)<0)
     RAW_LOG (INFO, "SerialCom(%s): can not apply setings",PortName);
     #endif
 }
+
+  delete [] PortName;
+  sleep(3);
+  }
+  #else
+//   TCHAR *pcCommPort = TEXT(PortName);
+//  out = new char[READ_BUFF_SIZE];
+//  outSize = 0;
+//  #ifdef ENABLE_LOGGING
+//  RAW_LOG (INFO, "SerialCom(%s): connecting...",PortName);
+//  #endif
+//  hComm = CreateFile(pcCommPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
+//  if (hComm == INVALID_HANDLE_VALUE){
+//    int err = GetLastError();
+//    if (err == ERROR_FILE_NOT_FOUND){
+//      #ifdef ENABLE_LOGGING
+//      RAW_LOG (INFO, "SerialCom(%s): can't connect - this com port or device doesn't exist",PortName);
+//      #endif
+//    }else{
+//      if (err = ERROR_ACCESS_DENIED){
+//        #ifdef ENABLE_LOGGING
+//        RAW_LOG (INFO, "SerialCom(%s): can't connect - this com port already in use",PortName);
+//        #endif
+//      }else{
+//        #ifdef ENABLE_LOGGING
+//        RAW_LOG (INFO, "SerialCom(%s): can't connect - unknown error",PortName);
+//        #endif
+//      }
+//    }
+//  }else{
+//    #ifdef ENABLE_LOGGING
+//    RAW_LOG (INFO, "SerialCom(%s): connected!",PortName);
+//    #endif
+//  }
+//  if (!SetupComm(hComm,1024,1024)){
+//    #ifdef ENABLE_LOGGING
+//    RAW_LOG (INFO, "SerialCom(%s): can't setup i/o buffers",PortName);
+//    #endif
+//  }
 //  COMMCONFIG conf;
 //  conf.dcb.DCBlength = sizeof(DCB);
 //  GetCommState(hComm, &conf.dcb);
 //  conf.dcb.BaudRate = BaudRate;              // Current baud
 //  conf.dcb.fBinary = TRUE;               // Binary mode; no EOF check
-//  conf.dcb.fParity = FALSE;               // Enable parity checking    //tty.c_cflag     &=  ~PARENB
+//  conf.dcb.fParity = FALSE;               // Enable parity checking
 //  conf.dcb.fOutxCtsFlow = FALSE;         // No CTS output flow control
 //  conf.dcb.fOutxDsrFlow = FALSE;         // No DSR output flow control
 //  conf.dcb.fDtrControl = DTR_CONTROL_ENABLE; // DTR flow control type
@@ -66,7 +105,6 @@ if(tcsetattr(hComm,TCSANOW,&optnew)<0)
 //  conf.dcb.fRtsControl = RTS_CONTROL_ENABLE; // RTS flow control
 //  conf.dcb.fAbortOnError = FALSE;        // Do not abort reads/writes on error
 //  conf.dcb.ByteSize = 8;                 // Number of bits/byte, 4-8
-//
 //  conf.dcb.Parity = NOPARITY;            // 0-4=no,odd,even,mark,space
 //  conf.dcb.StopBits = ONESTOPBIT;
 //  if (!SetCommState(hComm, &conf.dcb)){
@@ -86,16 +124,14 @@ if(tcsetattr(hComm,TCSANOW,&optnew)<0)
 //    RAW_LOG (INFO, "SerialCom(%s): can't set timeouts",PortName);
 //    #endif
 //  }
-
-
-  delete [] PortName;
-  sleep(3);
-  }
+//  delete [] PortName;
+//  Sleep(3000);
+  #endif
 }
 
 char *SerialCom::Read(void)
 {
-
+#if defined __linux__
 int toRead=READ_BUFF_SIZE-1;
 outSize=read(hComm,out,toRead);
 if(outSize<toRead)
@@ -104,8 +140,8 @@ if(outSize<toRead)
     RAW_LOG (INFO, "SerialCom(%s): some data lost",PortName);
     #endif
 }
-
-//  COMSTAT status;
+#else
+//COMSTAT status;
 //  DWORD errors;
 //  DWORD bytesRead;
 //  DWORD toRead;
@@ -123,12 +159,13 @@ if(outSize<toRead)
 //    outSize = bytesRead;
 //  }
 //  CloseHandle(osReader.hEvent);
+#endif
   return out;
 }
 
 void SerialCom::Write(char *Data, int DataSize)
 {
-
+#if defined __linux___
 int written=write(hComm,Data,DataSize);
 if(written<0)
 {
@@ -136,14 +173,14 @@ if(written<0)
     RAW_LOG (INFO, "SerialCom(%s): cannot write data",PortName);
     #endif
 }
-
-
+#else
 //  DWORD dwBytesWritten;
 //  OVERLAPPED osWriter = {0};
 //  osWriter.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 //  WriteFile(hComm, &Data[0], DataSize, &dwBytesWritten, &osWriter);
 //  WaitForSingleObject(osWriter.hEvent, SERIAL_WRITE_WAIT_MS);
 //  CloseHandle(osWriter.hEvent);
+#endif
 }
 
 int SerialCom::GetOutSize(void)
@@ -153,7 +190,11 @@ int SerialCom::GetOutSize(void)
 
 SerialCom::~SerialCom(void)
 {
+#if defined __linux__
 tcsetattr(hComm,TCSANOW,&optold);
   close(hComm);
+  #else
+  //CloseHandle(hComm);
+  #endif
   delete [] out;
 }

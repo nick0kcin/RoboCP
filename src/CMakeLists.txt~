@@ -6,17 +6,6 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5Xml REQUIRED)
 
-#find_package(PCL 1.2 REQUIRED)
-
-#include_directories(${PCL_INCLUDE_DIRS})
-#link_directories(${PCL_LIBRARY_DIRS})
-#add_definitions(${PCL_DEFINITIONS})
-
-#FIND_PACKAGE(Boost REQUIRED COMPONENTS serialization)
-#INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-#LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
-#ADD_DEFINITIONS( "-DHAS_BOOST" )
-
 find_package( OpenCV REQUIRED )
 
 
@@ -85,8 +74,8 @@ add_executable (Robot
 )
 target_include_directories(Robot PRIVATE RoboCPCommon RoboCPRobot RoboCPRobot/Configs)
 target_compile_definitions(Robot PRIVATE _CRT_SECURE_NO_WARNINGS)
-#target_link_libraries (Robot Qt5::Network Qt5::Xml ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
-target_link_libraries (Robot Qt5::Network Qt5::Xml  ${OpenCV_LIBS})
+target_link_libraries (Robot Qt5::Network Qt5::Xml ${OpenCV_LIBS})
+
 
 
 project(Server)
@@ -123,5 +112,8 @@ add_executable (Server
 )
 target_include_directories(Server PRIVATE RoboCPCommon RoboCPServer RoboCPRobot)
 target_compile_definitions(Server PRIVATE _CRT_SECURE_NO_WARNINGS)
-#target_link_libraries (Server Qt5::Network Qt5::Xml ${PCL_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
-target_link_libraries (Server Qt5::Network Qt5::Xml ${OpenCV_LIBS})
+target_link_libraries (Server Qt5::Network Qt5::Xml )
+
+
+
+

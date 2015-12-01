@@ -36,11 +36,15 @@ void SendSender::Start()
 		std::cout << "SendSender: Connected!" << std::endl; //TODO: write in log
 		#ifdef ENABLE_LOGGING
 		RAW_LOG(INFO, "SendSender: Connected!");
-		#endif 
+		#endif
 
 		while (socket->isOpen())
 		{
+		#ifdef BOOST
 			boost::shared_ptr<Send> sendData;
+			#else
+			std::shared_ptr <Send> sendData;
+			#endif // BOOST
 			sendData = buffer->Dequeue(); // Reading Send object from buffer
 
 			QByteArray block;

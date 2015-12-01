@@ -22,6 +22,7 @@
 #pragma once
 #include<QtCore/qhash.h>
 #include "Config.h"
+#include <iostream>
 
 class QJsonObject;
 

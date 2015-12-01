@@ -6,17 +6,22 @@
 #include "SendReceiver.h"
 #include "SendManager.h"
 #include "CommandMaker.h"
+#ifdef PCL
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#endif // PCL
 #include "XMLConfig.h"
 
 #include <QtCore/qfile.h>
 #include <QtXml/qdom.h>
-
+#ifdef BOOST
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
-
+#else
+#include <thread>
+#include <functional>
+#endif
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <glog/logging.h>
@@ -40,7 +45,7 @@ int main(char *args[], int count)
 		  config.deserialize(eNodes.at(0).toElement());
 	  }
 	  else
-		cout << "Can't find config.xml! Default config used." << endl;	 
+		std::cout << "Can't find config.xml! Default config used." << std::endl;
   }
 
   KinectBuffer kinectBuffer (10);
@@ -55,7 +60,7 @@ int main(char *args[], int count)
   SendManager sendManager (&sendBuffer, &kinectViewer);
 
 
-
+#ifdef BOOST
   boost::thread_group tgroup;
 
   tgroup.create_thread ( boost::bind (&KinectViewer::Start, &kinectViewer) );
@@ -72,6 +77,16 @@ int main(char *args[], int count)
 
 
   tgroup.join_all ();
+  #else
+  std::vector<std::thread> tgroup;
+  tgroup.push_back(std::thread(std::bind (&KinectViewer::Start, &kinectViewer)));
+  tgroup.push_back(std::thread(std::bind (&KinectManager::Start, &kinectManager)));
+  tgroup.push_back(std::thread(std::bind (&CommandMaker::Start, &commandMaker)));
+  tgroup.push_back(std::thread(std::bind (&SendReceiver::Start, &sendReceiver)));
+  tgroup.push_back(std::thread(std::bind (&SendManager::Start, &sendManager)));
+  for(int i=0;i<tgroup.size();i++)
+  tgroup[i].join();
+  #endif
 
   return 0;
 }

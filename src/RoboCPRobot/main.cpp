@@ -1,8 +1,9 @@
-﻿#pragma once
+#pragma once
 
 //#define FLOW_TEST
 //#define GPS_TEST
 //#define MOTION_TEST
+//#define ENABLE_LOGGING
 
 #include <stdarg.h>
 
@@ -19,9 +20,13 @@
 #include "Config.h"
 #include "configFactory.h"
 
+#ifdef BOOST
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
-
+#else
+#include <thread>
+#include <functional>
+#endif
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <glog/logging.h>
@@ -35,7 +40,9 @@
 #include "ImageFlowProcessing.h"
 #endif
 
-int main(char *args[], int count)
+#include <fstream>
+//int main(char *args[], int count)
+int main(int argc, char *argv[])
 {
 	freopen ("log.log", "a", stderr);
   #ifdef ENABLE_LOGGING
@@ -47,22 +54,22 @@ int main(char *args[], int count)
     cvSetCaptureProperty(capture,CV_CAP_PROP_FRAME_WIDTH,320);
     cvSetCaptureProperty(capture,CV_CAP_PROP_FRAME_HEIGHT,240);
     cvSetCaptureProperty(capture,CV_CAP_PROP_FPS,180);//òóò ìîæíî ñìåíèòü ïàðàìåòðû êàìåðû
-  
+
     CvCapture *capture2 = cvCreateCameraCapture(0);//0 - ñëó÷àéíàÿ êàìåðà, 1 - ps eye â ñëó÷àå íîóòáóêà ñ âåáêîé
     cvSetCaptureProperty(capture2,CV_CAP_PROP_FRAME_WIDTH,320);
     cvSetCaptureProperty(capture2,CV_CAP_PROP_FRAME_HEIGHT,240);
     cvSetCaptureProperty(capture2,CV_CAP_PROP_FPS,180);//òóò ìîæíî ñìåíèòü ïàðàìåòðû êàìåðû
-  
+
 	if(capture != NULL){
 		ImageFlowProcessing obj;
-		cvSetCaptureProperty( capture2, CV_CAP_PROP_POS_FRAMES, 50 );		
+		cvSetCaptureProperty( capture2, CV_CAP_PROP_POS_FRAMES, 50 );
 		IplImage *Img1 = 0, *Img2= 0;
 		Img1 = cvQueryFrame( capture2 );
 	//	cvSetCaptureProperty( capture, CV_CAP_PROP_POS_FRAMES, 200 );
-		Img2 = cvQueryFrame( capture );		
+		Img2 = cvQueryFrame( capture );
 		DisplacementImages res;
 		obj.CountDisplacement(Img1, Img2, &res);
-		
+
 		for(int i=0; i< res.NumVectors; i++){
 			cvLine( Img1, cvPoint(res.Vectors[i].Beginning.x, res.Vectors[i].Beginning.y), cvPoint(res.Vectors[i].End.x, res.Vectors[i].End.y), CV_RGB(0,255,0),1);
 		}
@@ -73,12 +80,12 @@ int main(char *args[], int count)
 		cvShowImage("Image2", Img2);
 		int key_pressed;
 		key_pressed = cvWaitKey(0);
-		res.~DisplacementImages(); 
+		res.~DisplacementImages();
 	}
 	else{
 		printf("Not Found\n");
 		scanf("%d");
-	}	
+	}
   #endif
 
   #ifdef FLOW_TEST
@@ -94,7 +101,7 @@ int main(char *args[], int count)
 
   /*
   XMLConfig config;
-  { // Loading config from "config.xml" 
+  { // Loading config from "config.xml"
     std::ifstream ifs("config.xml");
 	if (ifs.is_open()) {
 	  boost::archive::xml_iarchive ia(ifs);
@@ -103,15 +110,12 @@ int main(char *args[], int count)
 	else
 	  cout << "Can't find config.xml! Default config used." << endl; // No config.xml found
   }	*/
-
   configFactory cfgFactory;
   cfgFactory.Parse();
-
   KinectBuffer kinectBuffer1 (10);
   KinectBuffer kinectBuffer2 (10);
   KinectController kinectController (&kinectBuffer1);
   KinectDownsampler kinectDownsampler (&kinectBuffer1, &kinectBuffer2);
-
   KinectSender kinectSender (&kinectBuffer2);
   kinectSender.Configure(cfgFactory.ConfigByName("Kinect"), cfgFactory.ConfigByName("OctreeEncoder"));
 
@@ -138,8 +142,7 @@ int main(char *args[], int count)
   sendSender.Configure(cfgFactory.ConfigByName("Send"));
 
   SendProcessing sendProcessing(&NanoBuffer, &CopterBuffer, &CameraBuffer, &sendBuffer);
-  
-
+#ifdef BOOST
   boost::thread_group tgroup;
 
   tgroup.create_thread ( boost::bind (&KinectController::FakeStart, &kinectController) ); //don't have kinect so made FakeStart func for testing
@@ -149,9 +152,9 @@ int main(char *args[], int count)
   //tgroup.create_thread ( boost::bind (&KinectSender::Start, &kinectSender) );
 
   tgroup.create_thread ( boost::bind (&ClientReceiver::Start, &commandReceiver) );
-  
+
   tgroup.create_thread ( boost::bind (&NanoController::Start, &NanoControl) );
-  
+
   tgroup.create_thread ( boost::bind (&ArduCopterController::Start, &CopterControl) );
 
   tgroup.create_thread ( boost::bind (&CameraController::Start, &CameraControl) );
@@ -160,8 +163,29 @@ int main(char *args[], int count)
 
   tgroup.create_thread ( boost::bind (&SendProcessing::Start, &sendProcessing) );
 
-  tgroup.create_thread ( boost::bind (&SendSender::Start, &sendSender) );  
+  tgroup.create_thread ( boost::bind (&SendSender::Start, &sendSender) );
+  #else
+  std::vector<std::thread > tgroup;
+  tgroup.push_back(std::thread(std::bind(&KinectController::FakeStart,&kinectController)));
 
+  tgroup.push_back( std::thread(std::bind (&KinectDownsampler::Start, &kinectDownsampler) ));
+
+  //tgroup.push_back (std::thread( boost::bind (&KinectSender::Start, &kinectSender) );
+
+  tgroup.push_back (std::thread( std::bind (&ClientReceiver::Start, &commandReceiver) ) );
+
+  tgroup.push_back (std::thread( std::bind (&NanoController::Start, &NanoControl) ) );
+
+  tgroup.push_back (std::thread( std::bind (&ArduCopterController::Start, &CopterControl) ) );
+
+  tgroup.push_back (std::thread( std::bind (&CameraController::Start, &CameraControl) ) );
+
+  tgroup.push_back (std::thread( std::bind (&CommandProcessing::Start, &ComProc) ) );
+
+  tgroup.push_back (std::thread( std::bind (&SendProcessing::Start, &sendProcessing) ) );
+
+  tgroup.push_back ( std::thread(std::bind (&SendSender::Start, &sendSender) ) );
+#endif
   #ifdef GPS_TEST
   char *UTC = new char(32);
   char *Lat = new char(32);
@@ -183,9 +207,13 @@ int main(char *args[], int count)
   }
   #endif
 
+#ifdef BOOST
   tgroup.join_all ();
-  
-  
+#else
+for(int i=0;i<tgroup.size();i++)
+tgroup[i].join();
+#endif
+
   return 0;
 }
 

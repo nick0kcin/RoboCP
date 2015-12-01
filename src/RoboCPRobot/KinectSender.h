@@ -4,13 +4,14 @@
 #include "KinectBuffer.h"
 //#include "Config.h"
 
+#ifdef PCL
 //#include <boost/asio.hpp>
 //#include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 //#include <pcl/io/pcd_io.h>
 //#include <boost/interprocess/sync/interprocess_semaphore.hpp>
 #include "pcl/compression/octree_pointcloud_compression.h"
-
+#endif // PCL
 #ifdef ENABLE_LOGGING
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <glog/logging.h>
@@ -31,12 +32,13 @@ public:
   ~KinectSender(void);
 private:
 
+#ifdef PCL
 #if PCL_VERSION_COMPARE(<, 1, 7, 0)
 	pcl::octree::PointCloudCompression<pcl::PointXYZ>* octreeCoder;
 #else
 	pcl::io::OctreePointCloudCompression<pcl::PointXYZ>* octreeCoder;
 #endif
- 
+#endif
   KinectBuffer * buffer;
   int port;
 };

@@ -42,7 +42,17 @@ void CameraController::Start(void)
 	while (true)
 	{
 		Frame = cvQueryFrame(Capture);
+		if(Frame==NULL)
+		{
+		std::cout<<"NO FRAME FOUND";
+		return;
+		}
+		//int b=1/0;
+		#ifdef BOOST
 		boost::shared_ptr<CameraReceived> CameraImg(new CameraReceived(Frame));
+		#else
+		std::shared_ptr <CameraReceived> CameraImg(new CameraReceived(Frame));
+		#endif // BOOST
 		if (FrameLast != 0)
 		{
 			obj.CountDisplacement(FrameLast, Frame, &Displacement);
@@ -87,9 +97,11 @@ void CameraController::FakeStart(void)
 			FrameLast = cvQueryFrame(Capture);
 			Frame = cvQueryFrame(Capture);
 		}
-
+		#ifdef BOOST
 		boost::shared_ptr<CameraReceived> CameraImg(new CameraReceived(Frame));
-
+		#else
+		std::shared_ptr<CameraReceived> CameraImg(new CameraReceived(Frame));
+		#endif // BOOST
 		if (FrameLast != 0)
 		{
 			obj.CountDisplacement(FrameLast, Frame, &Displacement);
